@@ -8,8 +8,8 @@ namespace Loanity.Domain.Entities
 {
     public record Role
     {
-        public int Id { get; init; }
-        public string Name { get; init; } = null!;
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 
 }

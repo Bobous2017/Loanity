@@ -1,0 +1,13 @@
+﻿@model Loanity.Domain.Dtos.UserDto
+@{
+    ViewData["Title"] = "Delete User";
+}
+
+<h2>Are you sure?</h2>
+<p><strong>@Model.FirstName @Model.LastName</strong> - @Model.Email</p>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button class="btn btn-danger">Delete</button>
+    <a asp-action="Read" class="btn btn-secondary">Cancel</a>
+</form>

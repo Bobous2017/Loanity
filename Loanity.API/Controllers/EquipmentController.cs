@@ -101,25 +101,5 @@ namespace Loanity.API.Controllers
         }
     }
 
-    // Loanity.API/Controllers/ScanController.cs
-    [ApiController]
-    [Route("api/scan")]
-    public class ScanController : ControllerBase
-    {
-        private readonly ILoanService _loanService;
-        public ScanController(ILoanService loanService) => _loanService = loanService;
-
-        public record ScanRequest(int UserId, string QrCode, DateTime? DueAt, string Action); // "loan"|"return"
-
-        [HttpPost]
-        public async Task<IActionResult> Post(ScanRequest req)
-        {
-            return req.Action.ToLower() switch
-            {
-                "loan" => Ok(await _loanService.CreateLoanFromScanAsync(req.UserId, req.QrCode, req.DueAt ?? DateTime.UtcNow.AddDays(7))),
-                "return" => Ok(await _loanService.ReturnByScanAsync(req.UserId, req.QrCode)),
-                _ => BadRequest("Unknown action")
-            };
-        }
-    }
+   
 }

@@ -20,8 +20,12 @@ builder.Services.AddHttpClient("LoanityApi", client =>
 
 
 
-// Register your services for DI
+// Register your services for Dependency Injection
 builder.Services.AddScoped<ILoanService, LoanService>();
+builder.Services.AddScoped<IReservationService, ReservationService>();
+
+
+
 
 // Add controllers + Swagger
 builder.Services.AddControllers();

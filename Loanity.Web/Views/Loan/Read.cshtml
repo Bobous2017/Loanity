@@ -1,0 +1,41 @@
+﻿@* Views/Loan/Read.cshtml *@
+@model IEnumerable<Loanity.Domain.Dtos.LoanDto>
+
+@{
+    ViewData["Title"] = "Loans";
+}
+
+<h2>Loans</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Loan Id</th>
+            <th>User Id</th>
+            <th>Start At</th>
+            <th>Due At</th>
+            <th>Returned At</th>
+            <th>Status</th>
+            <th>Items</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var loan in Model)
+        {
+            <tr>
+                <td>@loan.Id</td>
+                <td>@loan.UserId</td>
+                <td>@loan.StartAt.ToString("dd.MM.yyyy HH.mm.ss")</td>
+                <td>@loan.DueAt.ToString("dd.MM.yyyy HH.mm.ss")</td>
+                <td>@(loan.ReturnedAt?.ToString("dd.MM.yyyy HH.mm.ss") ?? "Not Returned")</td>
+                <td>@loan.Status</td>
+                <td>
+                    @foreach (var item in loan.Items)
+                    {
+                        <span class="badge bg-info">@item.EquipmentId</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

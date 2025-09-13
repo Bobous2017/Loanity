@@ -9,24 +9,36 @@ namespace Loanity.API.Controllers
     [Route("api/scan")]
     public class ScanController : ControllerBase
     {
+        //Loan logic( Injection ) business rules ----------------3
         private readonly ILoanService _loanService;
         public ScanController(ILoanService loanService) => _loanService = loanService;
-
 
         [HttpPost]
         public async Task<IActionResult> Post(ScanRequestDto req)
         {
-            return req.Action.ToLower() switch
+            switch (req.Action.ToLower())
             {
-                "loan" => Ok(new ScanResultDto
-                {
-                    LoanId = (await _loanService.CreateLoanFromScanAsync(req.UserId, req.QrCode, req.DueAt ?? DateTime.UtcNow.AddDays(7))).Id,
-                    Message = "Loan successfully created"
-                }),
-                "return" => Ok(new { Message = "Device successfully returned" }),
-                _ => BadRequest("Unknown action: use 'loan' or 'return'")
-            };
-        }
+                case "loan":
+                    var loan = await _loanService.CreateLoanFromScanAsync( //  loaning
+                        req.UserId, req.QrCode, req.DueAt ?? DateTime.UtcNow.AddDays(7));
 
+                    return Ok(new ScanResultDto
+                    {
+                        LoanId = loan.Id,
+                        Message = "Loan successfully created"
+                    });
+
+                case "return":
+                    var returnedLoan = await _loanService.ReturnByScanAsync(req.UserId, req.QrCode); // /returning 
+
+                    if (returnedLoan is null)
+                        return NotFound(new { Message = "No active loan found to return." });
+
+                    return Ok(new { Message = "Device successfully returned" });
+
+                default:
+                    return BadRequest("Unknown action: use 'loan' or 'return'");
+            }
+        }
     }
 }

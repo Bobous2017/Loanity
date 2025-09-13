@@ -10,11 +10,12 @@ using System.Threading.Tasks;
 
 namespace Loanity.Infrastructure.Services
 {
+    //Loan logic( Inherite ILoanService and  Implimentation and Sync to Db )----------------2
     public class LoanService : ILoanService
     {
         private readonly LoanityDbContext _db;
         public LoanService(LoanityDbContext db) => _db = db;
-
+    
         public async Task<Loan> CreateLoanFromScanAsync(int userId, string qrCode, DateTime dueAt)
         {
             var item = await _db.Equipment.SingleOrDefaultAsync(e => e.QrCode == qrCode);
@@ -32,7 +33,6 @@ namespace Loanity.Infrastructure.Services
             await _db.SaveChangesAsync();
             return loan;
         }
-
         public async Task<Loan?> ReturnByScanAsync(int userId, string qrCode)
         {
             var item = await _db.Equipment.SingleOrDefaultAsync(e => e.QrCode == qrCode);
@@ -54,6 +54,8 @@ namespace Loanity.Infrastructure.Services
             await _db.SaveChangesAsync();
             return loan;
         }
+      
+
     }
 
 

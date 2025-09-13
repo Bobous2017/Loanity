@@ -52,6 +52,12 @@ namespace Loanity.Infrastructure
               .HasOne<Equipment>().WithMany().HasForeignKey(x => x.EquipmentId);
             b.Entity<Reservation>()
               .HasCheckConstraint("CK_Reservations_EndAfterStart", "EndAt > StartAt");
+           
+            b.Entity<Reservation>()
+            .HasOne<Loan>() 
+            .WithMany()
+            .HasForeignKey(x => x.LoanId)
+            .IsRequired(false);
 
             b.Entity<Loan>().HasKey(x => x.Id);
             b.Entity<Loan>()

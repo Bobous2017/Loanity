@@ -1,0 +1,42 @@
+﻿@model IEnumerable<Loanity.Domain.Entities.Reservation>
+
+@{
+    ViewData["Title"] = "All Reservations";
+}
+
+<h2>Reservations</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New Reservation</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>UserId</th>
+            <th>EquipmentId</th>
+            <th>StartAt</th>
+            <th>EndAt</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reservation in Model)
+        {
+            <tr>
+                <td>@reservation.Id</td>
+                <td>@reservation.UserId</td>
+                <td>@reservation.EquipmentId</td>
+                <td>@reservation.StartAt</td>
+                <td>@reservation.EndAt</td>
+                <td>@reservation.Status</td>
+                <td>
+                    <a asp-action="Update" asp-route-id="@reservation.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@reservation.Id" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

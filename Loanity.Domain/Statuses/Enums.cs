@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Loanity.Domain.Statuses
 {
     public enum EquipmentStatus { Available, Loaned, Reserved, Damaged, Lost }
-    public enum ReservationStatus { Pending, Active, Cancelled, Expired, Fulfilled }
-    public enum LoanStatus { Active, Overdue, Closed }
+    public enum ReservationStatus { Pending = 0, Active = 1, Cancelled= 2, Expired=3, Fulfilled=4 }
+    public enum LoanStatus { Active, Overdue, Closed}
 
 }

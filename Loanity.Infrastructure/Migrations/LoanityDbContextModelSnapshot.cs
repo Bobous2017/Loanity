@@ -170,6 +170,15 @@ namespace Loanity.Infrastructure.Migrations
                     b.Property<int>("EquipmentId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("EquipmentId1")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("LoanId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("LoanId1")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("StartAt")
                         .HasColumnType("TEXT");
 
@@ -180,11 +189,22 @@ namespace Loanity.Infrastructure.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("UserId1")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
 
                     b.HasIndex("EquipmentId");
 
+                    b.HasIndex("EquipmentId1");
+
+                    b.HasIndex("LoanId");
+
+                    b.HasIndex("LoanId1");
+
                     b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Reservations", t =>
                         {
@@ -321,11 +341,33 @@ namespace Loanity.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Loanity.Domain.Entities.Equipment", "Equipment")
+                        .WithMany()
+                        .HasForeignKey("EquipmentId1");
+
+                    b.HasOne("Loanity.Domain.Entities.Loan", null)
+                        .WithMany()
+                        .HasForeignKey("LoanId");
+
+                    b.HasOne("Loanity.Domain.Entities.Loan", "Loan")
+                        .WithMany()
+                        .HasForeignKey("LoanId1");
+
                     b.HasOne("Loanity.Domain.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Loanity.Domain.Entities.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId1");
+
+                    b.Navigation("Equipment");
+
+                    b.Navigation("Loan");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Loanity.Domain.Entities.User", b =>

@@ -35,24 +35,29 @@ namespace Loanity.Infrastructure.Services
         // Update a reservation (New or old Statut)
         public async Task<bool> UpdateAsync(Reservation updated)
         {
-            var existing = await _db.Reservations.FindAsync(updated.Id);
-            if (existing == null) return false;
+            var reservation = await _db.Reservations
+                .Include(r => r.Equipment) // 👈 Important
+                .FirstOrDefaultAsync(r => r.Id == updated.Id);
 
-            // Update reservation fields
-            existing.StartAt = updated.StartAt;
-            existing.EndAt = updated.EndAt;
-            existing.UserId = updated.UserId;
-            existing.EquipmentId = updated.EquipmentId;
-            existing.Status = updated.Status;
+            if (reservation == null)
+                return false;
 
-            // Update equipment status if needed
-            var equipment = await _db.Equipment.FindAsync(existing.EquipmentId);
+            reservation.StartAt = updated.StartAt;
+            reservation.EndAt = updated.EndAt;
+            reservation.UserId = updated.UserId;
+            reservation.EquipmentId = updated.EquipmentId;
+            reservation.Status = updated.Status;
+
+            // 🚨 Business rule: Update Equipment status based on Reservation status
+            var equipment = await _db.Equipment.FindAsync(updated.EquipmentId);
             if (equipment != null)
             {
                 equipment.Status = updated.Status switch
                 {
                     ReservationStatus.Active => EquipmentStatus.Reserved,
-                    ReservationStatus.Cancelled or ReservationStatus.Expired or ReservationStatus.Fulfilled => EquipmentStatus.Available,
+                    ReservationStatus.Fulfilled => EquipmentStatus.Loaned,
+                    ReservationStatus.Cancelled => EquipmentStatus.Available,
+                    ReservationStatus.Expired => EquipmentStatus.Available,
                     _ => equipment.Status
                 };
             }
@@ -60,7 +65,6 @@ namespace Loanity.Infrastructure.Services
             await _db.SaveChangesAsync();
             return true;
         }
-
 
         // Activate a reservation (make it valid now)
         public async Task<bool> ActivateReservationAsync(int reservationId)

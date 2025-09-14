@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Loanity.Domain.Dtos
+namespace Loanity.Domain.Dtos.CategoryType
 {
     public record CategoryDto
     (
-        int Id, 
+        int Id,
         string Name
 
     );

@@ -18,12 +18,9 @@ builder.Services.AddHttpClient("LoanityApi", client =>
 
 });
 
-
-
 // Register your services for Dependency Injection
 builder.Services.AddScoped<ILoanService, LoanService>();
-builder.Services.AddScoped<IReservationService, ReservationService>();
-
+builder.Services.AddScoped<IReservationService, ReservationService>(); // Step 4
 
 
 
@@ -37,9 +34,14 @@ var app = builder.Build();
 // Enable Swagger UI
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Loanity API v1");
+    });
 }
+
 
 // Middleware pipeline
 app.UseHttpsRedirection();

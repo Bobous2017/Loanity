@@ -3,7 +3,7 @@ using Loanity.Domain.Dtos.ScanType;
 using Loanity.Domain.IServices;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Loanity.API.Controllers
+namespace Loanity.API.Controllers.Actions
 {
     [ApiController]
     [Route("api/scan")]
@@ -13,6 +13,7 @@ namespace Loanity.API.Controllers
         private readonly ILoanService _loanService;
         public ScanController(ILoanService loanService) => _loanService = loanService;
 
+        // ------------ Scan (Loan or Return) ------------
         [HttpPost]
         public async Task<IActionResult> Post(ScanRequestDto req)
         {

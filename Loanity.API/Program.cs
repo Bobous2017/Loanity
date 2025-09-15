@@ -8,8 +8,13 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // Configure EF Core with SQLite
+//builder.Services.AddDbContext<LoanityDbContext>(options =>
+//    options.UseSqlite(builder.Configuration.GetConnectionString("LoanityDb")));
+
+// Configure Sql Server
 builder.Services.AddDbContext<LoanityDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("LoanityDb")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("LoanityDb")));
+
 
 builder.Services.AddHttpClient("LoanityApi", client =>
 {

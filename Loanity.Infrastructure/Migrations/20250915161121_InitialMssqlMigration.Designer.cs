@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Loanity.Infrastructure.Migrations
 {
     [DbContext(typeof(LoanityDbContext))]
-    [Migration("20250912224526_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250915161121_InitialMssqlMigration")]
+    partial class InitialMssqlMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -363,7 +363,7 @@ namespace Loanity.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Loanity.Domain.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Reservations")
                         .HasForeignKey("UserId1");
 
                     b.Navigation("Equipment");
@@ -392,6 +392,11 @@ namespace Loanity.Infrastructure.Migrations
             modelBuilder.Entity("Loanity.Domain.Entities.Loan", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Loanity.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

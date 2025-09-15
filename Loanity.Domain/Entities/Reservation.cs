@@ -14,7 +14,7 @@ namespace Loanity.Domain.Entities
         public DateTime EndAt { get; set; }
         public int UserId { get; set; }
         public int EquipmentId { get; set; }
-        public int? LoanId { get; set; } // ← This must be here
+        public int? LoanId { get; set; } // 
 
         public ReservationStatus Status { get; set; }
 

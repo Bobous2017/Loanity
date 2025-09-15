@@ -14,7 +14,6 @@ namespace Loanity.Infrastructure
     public class LoanityDbContext : DbContext
     {
         public LoanityDbContext(DbContextOptions<LoanityDbContext> options) : base(options) { }
-
         public DbSet<Role> Roles => Set<Role>();
         public DbSet<User> Users => Set<User>();
         public DbSet<EquipmentCategory> EquipmentCategories => Set<EquipmentCategory>();
@@ -22,7 +21,6 @@ namespace Loanity.Infrastructure
         public DbSet<Reservation> Reservations => Set<Reservation>();
         public DbSet<Loan> Loans => Set<Loan>();
         public DbSet<LoanItem> LoanItems => Set<LoanItem>();
-
         protected override void OnModelCreating(ModelBuilder b)
         {
             b.Entity<Role>().HasKey(x => x.Id);
@@ -42,22 +40,73 @@ namespace Loanity.Infrastructure
               .Property(x => x.Status).HasConversion<string>();
             b.Entity<Equipment>()
               .HasOne(x => x.Category).WithMany().HasForeignKey(x => x.CategoryId);
+            //b.Entity<Reservation>().HasKey(x => x.Id);
+            //b.Entity<Reservation>()
+            //  .Property(x => x.Status).HasConversion<string>();
+            //b.Entity<Reservation>()
+            //  .HasOne<User>().WithMany().HasForeignKey(x => x.UserId);
+            //b.Entity<Reservation>()
+            //  .HasOne<Equipment>().WithMany().HasForeignKey(x => x.EquipmentId);
+            //b.Entity<Reservation>()
+            //  .HasCheckConstraint("CK_Reservations_EndAfterStart", "EndAt > StartAt");   
+            //b.Entity<Reservation>()
+            //.HasOne<Loan>() 
+            //.WithMany()
+            //.HasForeignKey(x => x.LoanId)
+            //.IsRequired(false);
 
-            b.Entity<Reservation>().HasKey(x => x.Id);
+            //b.Entity<Reservation>()
+            //.Property(x => x.UserId)
+            //.HasColumnName("UserId");
+
             b.Entity<Reservation>()
-              .Property(x => x.Status).HasConversion<string>();
+                .Property(x => x.EquipmentId)
+                .HasColumnName("EquipmentId");
+
             b.Entity<Reservation>()
-              .HasOne<User>().WithMany().HasForeignKey(x => x.UserId);
+                .Property(x => x.LoanId)
+                .HasColumnName("LoanId");
+
             b.Entity<Reservation>()
-              .HasOne<Equipment>().WithMany().HasForeignKey(x => x.EquipmentId);
+                .Property(x => x.StartAt)
+                .HasColumnName("StartAt");
+
             b.Entity<Reservation>()
-              .HasCheckConstraint("CK_Reservations_EndAfterStart", "EndAt > StartAt");
-           
+                .Property(x => x.EndAt)
+                .HasColumnName("EndAt");
+
             b.Entity<Reservation>()
-            .HasOne<Loan>() 
+            .Property(x => x.UserId)
+            .HasColumnName("UserId");
+
+            b.Entity<Reservation>()
+                .Property(x => x.EquipmentId)
+                .HasColumnName("EquipmentId");
+
+            b.Entity<Reservation>()
+                .Property(x => x.LoanId)
+                .HasColumnName("LoanId");
+
+            b.Entity<Reservation>()
+                .Property(x => x.StartAt)
+                .HasColumnName("StartAt");
+
+            b.Entity<Reservation>()
+                .Property(x => x.EndAt)
+                .HasColumnName("EndAt");
+
+            b.Entity<Reservation>()
+            .Property(r => r.Status)
+            .HasConversion<string>();
+
+
+            b.Entity<Reservation>()
+            .HasOne(r => r.Loan)
             .WithMany()
-            .HasForeignKey(x => x.LoanId)
+            .HasForeignKey(r => r.LoanId) 
             .IsRequired(false);
+
+
 
             b.Entity<Loan>().HasKey(x => x.Id);
             b.Entity<Loan>()
@@ -73,6 +122,7 @@ namespace Loanity.Infrastructure
               .HasOne(li => li.Loan).WithMany(l => l.Items).HasForeignKey(li => li.LoanId);
             b.Entity<LoanItem>()
               .HasOne(li => li.Equipment).WithMany(e => e.LoanItems).HasForeignKey(li => li.EquipmentId);
+
 
             // --- Seed Roles ---
             b.Entity<Role>().HasData( new Role { Id = 1, Name = "Admin" }, new Role { Id = 2, Name = "User" });

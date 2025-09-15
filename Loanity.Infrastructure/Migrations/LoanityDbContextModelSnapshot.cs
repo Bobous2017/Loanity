@@ -360,7 +360,7 @@ namespace Loanity.Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Loanity.Domain.Entities.User", "User")
-                        .WithMany()
+                        .WithMany("Reservations")
                         .HasForeignKey("UserId1");
 
                     b.Navigation("Equipment");
@@ -389,6 +389,11 @@ namespace Loanity.Infrastructure.Migrations
             modelBuilder.Entity("Loanity.Domain.Entities.Loan", b =>
                 {
                     b.Navigation("Items");
+                });
+
+            modelBuilder.Entity("Loanity.Domain.Entities.User", b =>
+                {
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

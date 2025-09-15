@@ -19,6 +19,7 @@ namespace Loanity.Domain.Entities
         public string Email { get; set; } = null!;
         public string? Phone { get; set; }
         // address fields omitted for brevity
+        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>(); // ← ADD THIS
 
     }
 }

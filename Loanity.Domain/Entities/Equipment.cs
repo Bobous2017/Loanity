@@ -18,6 +18,6 @@ namespace Loanity.Domain.Entities
         public string? Color { get; set; }
         public EquipmentStatus Status { get; set; } = EquipmentStatus.Available;
         public ICollection<LoanItem> LoanItems { get; set; } = new List<LoanItem>();
-
+        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>(); 
     }
 }

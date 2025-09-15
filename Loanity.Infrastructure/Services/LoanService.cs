@@ -24,7 +24,7 @@ namespace Loanity.Infrastructure.Services
             if (item.Status is not EquipmentStatus.Available)
                 throw new InvalidOperationException("Device not available");
 
-            var loan = new Loan { UserId = userId, DueAt = dueAt, Status = LoanStatus.Active };
+            var loan = new Loan { UserId = userId, DueAt = dueAt,  Status = LoanStatus.Active };
             loan.Items.Add(new LoanItem { Loan = loan, Equipment = item });
 
             item.Status = EquipmentStatus.Loaned;

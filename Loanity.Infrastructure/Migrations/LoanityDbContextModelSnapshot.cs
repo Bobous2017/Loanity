@@ -165,51 +165,38 @@ namespace Loanity.Infrastructure.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("EndAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("EndAt");
 
                     b.Property<int>("EquipmentId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("EquipmentId1")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("EquipmentId");
 
                     b.Property<int?>("LoanId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("LoanId1")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("LoanId");
 
                     b.Property<DateTime>("StartAt")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasColumnName("StartAt");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("UserId1")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("UserId");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EquipmentId");
 
-                    b.HasIndex("EquipmentId1");
-
                     b.HasIndex("LoanId");
-
-                    b.HasIndex("LoanId1");
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("UserId1");
-
-                    b.ToTable("Reservations", t =>
-                        {
-                            t.HasCheckConstraint("CK_Reservations_EndAfterStart", "EndAt > StartAt");
-                        });
+                    b.ToTable("Reservations");
                 });
 
             modelBuilder.Entity("Loanity.Domain.Entities.Role", b =>
@@ -335,33 +322,21 @@ namespace Loanity.Infrastructure.Migrations
 
             modelBuilder.Entity("Loanity.Domain.Entities.Reservation", b =>
                 {
-                    b.HasOne("Loanity.Domain.Entities.Equipment", null)
-                        .WithMany()
+                    b.HasOne("Loanity.Domain.Entities.Equipment", "Equipment")
+                        .WithMany("Reservations")
                         .HasForeignKey("EquipmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Loanity.Domain.Entities.Equipment", "Equipment")
-                        .WithMany()
-                        .HasForeignKey("EquipmentId1");
-
-                    b.HasOne("Loanity.Domain.Entities.Loan", null)
+                    b.HasOne("Loanity.Domain.Entities.Loan", "Loan")
                         .WithMany()
                         .HasForeignKey("LoanId");
 
-                    b.HasOne("Loanity.Domain.Entities.Loan", "Loan")
-                        .WithMany()
-                        .HasForeignKey("LoanId1");
-
-                    b.HasOne("Loanity.Domain.Entities.User", null)
-                        .WithMany()
+                    b.HasOne("Loanity.Domain.Entities.User", "User")
+                        .WithMany("Reservations")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Loanity.Domain.Entities.User", "User")
-                        .WithMany("Reservations")
-                        .HasForeignKey("UserId1");
 
                     b.Navigation("Equipment");
 
@@ -384,6 +359,8 @@ namespace Loanity.Infrastructure.Migrations
             modelBuilder.Entity("Loanity.Domain.Entities.Equipment", b =>
                 {
                     b.Navigation("LoanItems");
+
+                    b.Navigation("Reservations");
                 });
 
             modelBuilder.Entity("Loanity.Domain.Entities.Loan", b =>

@@ -146,15 +146,11 @@ namespace Loanity.Infrastructure.Migrations
                     UserId = table.Column<int>(type: "INTEGER", nullable: false),
                     EquipmentId = table.Column<int>(type: "INTEGER", nullable: false),
                     LoanId = table.Column<int>(type: "INTEGER", nullable: true),
-                    Status = table.Column<string>(type: "TEXT", nullable: false),
-                    EquipmentId1 = table.Column<int>(type: "INTEGER", nullable: true),
-                    UserId1 = table.Column<int>(type: "INTEGER", nullable: true),
-                    LoanId1 = table.Column<int>(type: "INTEGER", nullable: true)
+                    Status = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Reservations", x => x.Id);
-                    table.CheckConstraint("CK_Reservations_EndAfterStart", "EndAt > StartAt");
                     table.ForeignKey(
                         name: "FK_Reservations_Equipment_EquipmentId",
                         column: x => x.EquipmentId,
@@ -162,18 +158,8 @@ namespace Loanity.Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Reservations_Equipment_EquipmentId1",
-                        column: x => x.EquipmentId1,
-                        principalTable: "Equipment",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Reservations_Loans_LoanId",
                         column: x => x.LoanId,
-                        principalTable: "Loans",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Reservations_Loans_LoanId1",
-                        column: x => x.LoanId1,
                         principalTable: "Loans",
                         principalColumn: "Id");
                     table.ForeignKey(
@@ -182,11 +168,6 @@ namespace Loanity.Infrastructure.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Reservations_Users_UserId1",
-                        column: x => x.UserId1,
-                        principalTable: "Users",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.InsertData(
@@ -264,29 +245,14 @@ namespace Loanity.Infrastructure.Migrations
                 column: "EquipmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_EquipmentId1",
-                table: "Reservations",
-                column: "EquipmentId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Reservations_LoanId",
                 table: "Reservations",
                 column: "LoanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reservations_LoanId1",
-                table: "Reservations",
-                column: "LoanId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Reservations_UserId",
                 table: "Reservations",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Reservations_UserId1",
-                table: "Reservations",
-                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Roles_Name",

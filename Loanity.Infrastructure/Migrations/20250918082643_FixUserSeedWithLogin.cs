@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Loanity.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMssqlMigration : Migration
+    public partial class FixUserSeedWithLogin : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -72,6 +72,9 @@ namespace Loanity.Infrastructure.Migrations
                     RoleId = table.Column<int>(type: "INTEGER", nullable: false),
                     FirstName = table.Column<string>(type: "TEXT", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", nullable: false),
+                    Username = table.Column<string>(type: "TEXT", nullable: false),
+                    Password = table.Column<string>(type: "TEXT", nullable: true),
+                    RfidChip = table.Column<string>(type: "TEXT", nullable: true),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
                     Phone = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -199,11 +202,11 @@ namespace Loanity.Infrastructure.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Email", "FirstName", "LastName", "Phone", "RoleId" },
+                columns: new[] { "Id", "Email", "FirstName", "LastName", "Password", "Phone", "RfidChip", "RoleId", "Username" },
                 values: new object[,]
                 {
-                    { 1, "alice@example.com", "Alice", "Admin", null, 1 },
-                    { 2, "bob@example.com", "Bob", "Borrower", null, 2 }
+                    { 1, "alice@example.com", "Alice", "Admin", "admin", null, "123456", 1, "admin" },
+                    { 2, "bob@example.com", "Bob", "Borrower", "bob2017", null, null, 2, "bob" }
                 });
 
             migrationBuilder.CreateIndex(

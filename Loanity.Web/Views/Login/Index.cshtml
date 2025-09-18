@@ -1,0 +1,35 @@
+﻿@model Loanity.Domain.Dtos.LoginDto
+
+@{
+    Layout = null; //Disables nav bar and footer for login page
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="login-container">
+        <h2>Login</h2>
+
+        <form asp-controller="Login" asp-action="Login" method="post">
+
+            <div>
+                <label>Username</label>
+                <input asp-for="Username" />
+            </div>
+            <div>
+                <label>Password</label>
+                <input asp-for="Password" type="password" />
+            </div>
+            <div>
+                <label>RFID (Admin only)</label>
+                <input asp-for="RfidChip" />
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+</body>
+</html>

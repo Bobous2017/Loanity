@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Loanity.Infrastructure.Migrations
 {
     [DbContext(typeof(LoanityDbContext))]
-    [Migration("20250917104909_InitialMssqlMigration")]
-    partial class InitialMssqlMigration
+    [Migration("20250918082643_FixUserSeedWithLogin")]
+    partial class FixUserSeedWithLogin
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -250,11 +250,21 @@ namespace Loanity.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Password")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Phone")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RfidChip")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
@@ -272,7 +282,10 @@ namespace Loanity.Infrastructure.Migrations
                             Email = "alice@example.com",
                             FirstName = "Alice",
                             LastName = "Admin",
-                            RoleId = 1
+                            Password = "admin",
+                            RfidChip = "123456",
+                            RoleId = 1,
+                            Username = "admin"
                         },
                         new
                         {
@@ -280,7 +293,9 @@ namespace Loanity.Infrastructure.Migrations
                             Email = "bob@example.com",
                             FirstName = "Bob",
                             LastName = "Borrower",
-                            RoleId = 2
+                            Password = "bob2017",
+                            RoleId = 2,
+                            Username = "bob"
                         });
                 });
 

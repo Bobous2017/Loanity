@@ -13,10 +13,21 @@ public class HomeController : Controller
         _logger = logger;
     }
 
+    //public IActionResult Index()
+    //{
+    //    return View();
+    //}
     public IActionResult Index()
     {
+        // Example check: redirect if not logged in
+        if (!User.Identity.IsAuthenticated)
+        {
+            return RedirectToAction("Index", "Login");
+        }
+
         return View();
     }
+
 
     public IActionResult Privacy()
     {

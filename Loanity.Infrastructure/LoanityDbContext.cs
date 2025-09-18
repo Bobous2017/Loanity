@@ -40,24 +40,7 @@ namespace Loanity.Infrastructure
               .Property(x => x.Status).HasConversion<string>();
             b.Entity<Equipment>()
               .HasOne(x => x.Category).WithMany().HasForeignKey(x => x.CategoryId);
-            //b.Entity<Reservation>().HasKey(x => x.Id);
-            //b.Entity<Reservation>()
-            //  .Property(x => x.Status).HasConversion<string>();
-            //b.Entity<Reservation>()
-            //  .HasOne<User>().WithMany().HasForeignKey(x => x.UserId);
-            //b.Entity<Reservation>()
-            //  .HasOne<Equipment>().WithMany().HasForeignKey(x => x.EquipmentId);
-            //b.Entity<Reservation>()
-            //  .HasCheckConstraint("CK_Reservations_EndAfterStart", "EndAt > StartAt");   
-            //b.Entity<Reservation>()
-            //.HasOne<Loan>() 
-            //.WithMany()
-            //.HasForeignKey(x => x.LoanId)
-            //.IsRequired(false);
-
-            //b.Entity<Reservation>()
-            //.Property(x => x.UserId)
-            //.HasColumnName("UserId");
+           
 
             b.Entity<Reservation>()
                 .Property(x => x.EquipmentId)
@@ -141,9 +124,30 @@ namespace Loanity.Infrastructure
 
             // --- Seed Users ---
             b.Entity<User>().HasData(
-                new User { Id = 1, FirstName = "Alice", LastName = "Admin", Email = "alice@example.com", RoleId = 1 },
-                new User { Id = 2, FirstName = "Bob", LastName = "Borrower", Email = "bob@example.com", RoleId = 2 }
-            );
+             new User
+             {
+                 Id = 1,
+                 FirstName = "Alice",
+                 LastName = "Admin",
+                 Email = "alice@example.com",
+                 Username = "admin",
+                 Password = "admin", // (or hashed later)
+                 RfidChip = "123456",
+                 RoleId = 1
+             },
+             new User
+             {
+                 Id = 2,
+                 FirstName = "Bob",
+                 LastName = "Borrower",
+                 Email = "bob@example.com",
+                 Username = "bob",
+                 Password = "bob2017", // (or hashed later)
+                 RfidChip = null,
+                 RoleId = 2
+             }
+         );
+
         }
 
     }

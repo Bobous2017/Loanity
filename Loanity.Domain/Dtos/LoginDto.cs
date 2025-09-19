@@ -8,8 +8,8 @@ namespace Loanity.Domain.Dtos
 {
     public class LoginDto
     {
-        public string Username { get; set; } = null;
-        public string Password { get; set; } = null!;
+        public string UserName { get; set; } = null;
+        public string PassWord { get; set; } = null!;
         public string? RfidChip { get; set; } // Only needed for Admin
     }
 

@@ -1,6 +1,7 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using Loanity.Web.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace Loanity.Web.Controllers;
 
@@ -17,6 +18,7 @@ public class HomeController : Controller
     //{
     //    return View();
     //}
+    [Authorize]
     public IActionResult Index()
     {
         // Example check: redirect if not logged in

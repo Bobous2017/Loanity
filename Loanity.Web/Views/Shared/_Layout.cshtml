@@ -71,4 +71,11 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+<script>
+    // Redirect user to Login after 1 minute of inactivity (matching your server session)
+    setTimeout(function () {
+        window.location.href = '/Login';
+    }, 60 * 1000); // 60 seconds
+</script>
+
 </html>

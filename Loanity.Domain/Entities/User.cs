@@ -16,8 +16,8 @@ namespace Loanity.Domain.Entities
         public Role? Role { get; set; }
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
-        public string Username { get; set; } = null!;
-        public string? Password { get; set; }
+        public string UserName { get; set; } = null!;
+        public string? PassWord { get; set; }
         public string? RfidChip { get; set; } // Only needed for Admin
         public string Email { get; set; } = null!;
         public string? Phone { get; set; }

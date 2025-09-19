@@ -130,8 +130,8 @@ namespace Loanity.Infrastructure
                  FirstName = "Alice",
                  LastName = "Admin",
                  Email = "alice@example.com",
-                 Username = "admin",
-                 Password = "admin", // (or hashed later)
+                 UserName = "admin",
+                 PassWord = "admin", // (or hashed later)
                  RfidChip = "123456",
                  RoleId = 1
              },
@@ -141,8 +141,8 @@ namespace Loanity.Infrastructure
                  FirstName = "Bob",
                  LastName = "Borrower",
                  Email = "bob@example.com",
-                 Username = "bob",
-                 Password = "bob2017", // (or hashed later)
+                 UserName = "bob",
+                 PassWord = "bob2017", // (or hashed later)
                  RfidChip = null,
                  RoleId = 2
              }

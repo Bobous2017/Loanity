@@ -1,8 +1,13 @@
 ﻿@model Loanity.Domain.Dtos.LoginDto
 
 @{
-    Layout = null; //Disables nav bar and footer for login page
+   // ViewData["Title"] = "Login";
+    Layout = null; // Disables nav bar and footer for login page
 }
+
+<h2>@ViewData["Title"]</h2>
+
+
 
 <!DOCTYPE html>
 <html>
@@ -14,22 +19,31 @@
     <div class="login-container">
         <h2>Login</h2>
 
-        <form asp-controller="Login" asp-action="Login" method="post">
-
+        <form asp-controller="Login" asp-action="Login" method="post" autocomplete="off">
             <div>
                 <label>Username</label>
-                <input asp-for="Username" />
+                <input asp-for="UserName" autocomplete="off" />
             </div>
             <div>
                 <label>Password</label>
-                <input asp-for="Password" type="password" />
+                <input asp-for="PassWord" type="password" autocomplete="new-password" />
             </div>
             <div>
                 <label>RFID (Admin only)</label>
-                <input asp-for="RfidChip" />
+                <input asp-for="RfidChip" autocomplete="off" />
             </div>
             <button type="submit">Login</button>
         </form>
+
     </div>
 </body>
 </html>
+@if (ViewData.ModelState.Values.Any(v => v.Errors.Count > 0))
+{
+    <div class="alert alert-danger">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p>@error.ErrorMessage</p>
+        }
+    </div>
+}

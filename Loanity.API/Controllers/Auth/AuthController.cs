@@ -15,35 +15,48 @@
 
             public AuthController(LoanityDbContext db) => _db = db;
 
-            [HttpPost("login")]
-            public IActionResult Login([FromBody] LoginDto dto)
+       
+        [HttpPost("login")]
+        public IActionResult Login([FromBody] LoginDto dto)
+        {
+            var userQuery = _db.Users.Where(u =>
+                u.UserName == dto.UserName &&
+                u.PassWord == dto.PassWord
+            );
+
+            // Load the user first (to check their role)
+            var user = userQuery.FirstOrDefault();
+
+            if (user == null)
+                return Unauthorized("Invalid login credentials");
+
+            // Enforce RFID check for Admins
+            if (user.RoleId == 1) // Admin
             {
-                var userQuery = _db.Users.Where(u =>
-                    u.Username == dto.Username &&
-                    u.Password == dto.Password
-                );
-
-                if (!string.IsNullOrEmpty(dto.RfidChip))
-                    userQuery = userQuery.Where(u => u.RfidChip == dto.RfidChip);
-
-                var user = userQuery.Select(u => new
+                if (string.IsNullOrEmpty(dto.RfidChip) || dto.RfidChip != user.RfidChip)
                 {
-                    u.Id,
-                    u.FirstName,
-                    u.LastName,
-                    u.Username,
-                    u.Password,
-                    u.RoleId,
-                    u.Email,
-                    u.RfidChip
-                }).FirstOrDefault();
-
-                if (user == null)
-                    return Unauthorized("Invalid login credentials");
-
-                return Ok(user);
+                    return Unauthorized("RFID is required for Admin login.");
+                }
             }
+
+            // Return user DTO
+            var result = new
+            {
+                user.Id,
+                user.FirstName,
+                user.LastName,
+                user.UserName,
+                user.PassWord,
+                user.RoleId,
+                user.Email,
+                user.RfidChip
+            };
+
+            return Ok(result);
         }
+
+
     }
+}
 
 

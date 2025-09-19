@@ -9,7 +9,7 @@
 //    public class LoanController : Controller
 //    {
 //        private readonly IHttpClientFactory _http;
-//        //private readonly string _baseUrl = "http://localhost:5253/api/loan";
+//        //private readonly string _baseUrl = "http://10.130.56.53:5253/api/loan";
 
 //        public LoanController(IHttpClientFactory http)
 //        {

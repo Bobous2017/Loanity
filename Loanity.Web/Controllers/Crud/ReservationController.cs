@@ -8,8 +8,8 @@
 //    public class ReservationController : Controller
 //    {
 //        private readonly HttpClient _http;
-//        private readonly string _baseUrl = "http://localhost:5253/api/reservation";
-//        private string _baseUrlAction = "http://localhost:5253/api/reservation-action";
+//        private readonly string _baseUrl = "http://10.130.56.53:5253/api/reservation";
+//        private string _baseUrlAction = "http://10.130.56.53:5253/api/reservation-action";
 //        public ReservationController(HttpClient http)
 //        {
 //            _http = http;

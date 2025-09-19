@@ -107,8 +107,7 @@ namespace Loanity.API.Controllers.Crud
         // Constructor
         public EquipmentController(LoanityDbContext db) : base(db) { }
 
-        // ----------------- READ by id (custom override if needed) -----------------
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public override async Task<IActionResult> GetById(int id)
         {
             var equipment = await _db.Equipment
@@ -117,7 +116,27 @@ namespace Loanity.API.Controllers.Crud
             return equipment == null ? NotFound() : Ok(equipment);
         }
 
-        // ----------------- READ by QR -----------------
+        // ----------------- READ by multiple IDs -----------------
+        [HttpGet("{ids}")]
+        public async Task<IActionResult> GetByIds(string ids)
+        {
+            var idList = ids.Split(',')
+                            .Select(idStr => int.TryParse(idStr, out var id) ? id : (int?)null)
+                            .Where(id => id.HasValue)
+                            .Select(id => id.Value)
+                            .ToList();
+
+            if (idList.Count == 0)
+                return BadRequest("No valid IDs provided.");
+
+            var equipmentList = await _db.Equipment
+                                         .Include(e => e.Category)
+                                         .Where(e => idList.Contains(e.Id))
+                                         .ToListAsync();
+
+            return Ok(equipmentList);
+        }
+
         [HttpGet("by-qr/{qr}")]
         public async Task<IActionResult> GetByQr(string qr)
         {

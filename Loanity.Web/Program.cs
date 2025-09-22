@@ -9,7 +9,9 @@ builder.Services.AddControllersWithViews();
 // Register HttpClient for API calls
 builder.Services.AddHttpClient("LoanityApi", client =>
 {
-    client.BaseAddress = new Uri("http://10.130.56.53:5253/"); // use your API’s actual port
+    client.BaseAddress = new Uri("http://localhost:5253/"); // use your API’s actual port
+    //client.BaseAddress = new Uri("http://10.130.56.53:5253/"); // use your API’s actual port
+
 
 
 

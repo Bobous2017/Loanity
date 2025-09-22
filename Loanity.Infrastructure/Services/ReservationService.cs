@@ -10,28 +10,6 @@ namespace Loanity.Infrastructure.Services
         private readonly LoanityDbContext _db;
         public ReservationService(LoanityDbContext db) => _db = db;
 
-        // Create a reservation (Pending)
-        //public async Task<Reservation> CreateAsync(int userId, int equipmentId, DateTime startAt, DateTime endAt)
-        //{
-        //    var equipment = await _db.Equipment.FindAsync(equipmentId);
-        //    if (equipment == null) throw new InvalidOperationException("Equipment not found");
-        //    if (equipment.Status != EquipmentStatus.Available)
-        //        throw new InvalidOperationException("Equipment is not available for reservation");
-
-        //    var reservation = new Reservation
-        //    {
-        //        UserId = userId,
-        //        EquipmentId = equipmentId,
-        //        StartAt = startAt,
-        //        EndAt = endAt,
-        //        Status = ReservationStatus.Pending
-        //    };
-
-        //    _db.Reservations.Add(reservation);
-        //    await _db.SaveChangesAsync();
-        //    return reservation;
-        //}
-
         public async Task<Reservation> CreateAsync(int userId, int equipmentId, DateTime startAt, DateTime endAt)
         {
             try

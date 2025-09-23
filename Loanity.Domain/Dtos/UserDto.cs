@@ -16,7 +16,8 @@ namespace Loanity.Domain.Dtos
         string Email,
         string? Phone,
         int RoleId,
-        string? RoleName
+        string? RoleName,
+        string? ConfirmAdminPassword // new
     );
 
 }

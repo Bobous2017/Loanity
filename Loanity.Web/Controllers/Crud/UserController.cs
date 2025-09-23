@@ -48,7 +48,22 @@ public class UserController : CrudControllerWeb<UserDto>
     public override async Task<IActionResult> Update(int id, UserDto dto)
     {
         dto = dto with { Id = id };
-        var response = await _http.PutAsJsonAsync($"{_baseUrl}/{id}", dto);
+
+        // Hvis password er tomt, behold det gamle
+        //if (string.IsNullOrWhiteSpace(dto.PassWord))
+        //{
+        //    var existingUser = await _http.GetFromJsonAsync<UserDto>($"{_baseUrl}/{id}");
+        //    dto = dto with { PassWord = existingUser.PassWord };
+        //}
+        if (string.IsNullOrWhiteSpace(dto.PassWord))
+        {
+            dto = dto with { PassWord = null };
+        }
+
+
+        //var response = await _http.PutAsJsonAsync($"{_baseUrl}/{id}", dto);
+        var response = await _http.PutAsJsonAsync($"{_baseUrl}/{id}/dto", dto);
+
 
         if (response.IsSuccessStatusCode)
             return RedirectToAction("Read");
@@ -56,4 +71,7 @@ public class UserController : CrudControllerWeb<UserDto>
         await LoadRolesAsync();
         return View(dto);
     }
+
+
+
 }

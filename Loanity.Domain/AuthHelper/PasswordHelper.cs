@@ -9,19 +9,35 @@ namespace Loanity.Domain.AuthHelper
 {
     public static class PasswordHelper
     {
+
+        //  Hashing password fra  creating User or Opdatering User
         public static string Hash(string password)
         {
             using var sha256 = SHA256.Create();
             var bytes = Encoding.UTF8.GetBytes(password);
             var hash = sha256.ComputeHash(bytes);
-            //return Convert.ToHexString(hash).ToLower();
-            //return Convert.ToBase64String(hash);  // admin:   --AND u.Password = 'jGl25bVBBBW96Qi9Te4V37Fnqchz/Eu4qB9vKrRIqRg='
-            //Convert to HEX string, to match DB format
+
             var sb = new StringBuilder();
             foreach (var b in hash)
                 sb.Append(b.ToString("x2"));
 
-            return sb.ToString(); // admin '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918' 
+            return sb.ToString();
         }
+
+
+        // Den er tjekker faktisk opdetering hvis der er Admin
+        public static bool Verify(string password, string storedHash)
+        {
+            var hashedInput = Hash(password);
+
+            // DEBUG OUTPUT
+            Console.WriteLine("[DEBUG] Raw Input Password: " + password);
+            Console.WriteLine("[DEBUG] Hashed Input:       " + hashedInput);
+            Console.WriteLine("[DEBUG] Stored Hash:        " + storedHash);
+
+            return string.Equals(hashedInput, storedHash, StringComparison.OrdinalIgnoreCase);
+        }
+
     }
+
 }

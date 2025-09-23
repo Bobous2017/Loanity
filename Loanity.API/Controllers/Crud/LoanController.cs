@@ -66,5 +66,34 @@ namespace Loanity.API.Controllers.Crud
 
             return Ok(dto);
         }
+
+        // ----------------- READ by UserId with DTO -----------------
+        [HttpGet("user/{userId}")]
+        public async Task<IActionResult> GetByUserId(int userId)
+        {
+            var loans = await _db.Loans
+                .Include(l => l.Items)
+                    .ThenInclude(i => i.Equipment)
+                .Where(l => l.UserId == userId)
+                .ToListAsync();
+
+            if (loans == null || loans.Count == 0) return NotFound();
+
+            var dtoList = loans.Select(loan => new LoanDto(
+                loan.Id,
+                loan.UserId,
+                loan.StartAt,
+                loan.DueAt,
+                loan.ReturnedAt,
+                loan.Status.ToString(),
+                loan.ReservationId,
+                loan.Items.Select(item => new LoanItemDto(
+                    item.EquipmentId,
+                    item.Equipment.Name
+                )).ToList()
+            )).ToList();
+
+            return Ok(dtoList);
+        }
     }
 }

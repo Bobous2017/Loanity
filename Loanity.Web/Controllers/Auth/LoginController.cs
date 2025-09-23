@@ -69,7 +69,11 @@ namespace Loanity.Web.Controllers.Auth
                 return RedirectToAction("Index", "Home");
             }
 
-            ModelState.AddModelError("", "Invalid login attempt"); // Feeedback to user
+            //ModelState.AddModelError("", "Invalid login attempt"); // Feeedback to user
+
+            // ❗ Read error message from API
+            var errorMessage = await response.Content.ReadAsStringAsync();
+            ModelState.AddModelError("", errorMessage); // Show exact reason
             return View("Index", model);
         }
 

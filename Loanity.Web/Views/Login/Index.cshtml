@@ -19,31 +19,81 @@
     <div class="login-container">
         <h2>Login</h2>
 
-        <form asp-controller="Login" asp-action="Login" method="post" autocomplete="off">
+        <form asp-controller="Login" asp-action="Login" id="loginForm method="post" autocomplete="off">
             <div>
                 <label>Username</label>
-                <input asp-for="UserName" autocomplete="off" />
+                @* <input asp-for="UserName"/> *@
+                <input asp-for="UserName" id="username" pattern="^[a-zA-Z0-9_]{3,20}$" title="Only letters, numbers, and underscore (3-20 chars)" autocomplete="off" />
+
             </div>
             <div>
                 <label>Password</label>
-                <input asp-for="PassWord" type="password" autocomplete="new-password" />
+                @* <input asp-for="PassWord" type="password" autocomplete="new-password" /> *@
+                <input asp-for="PassWord" id="password" type="password" minlength="6" maxlength="64" autocomplete="new-password" />
+
             </div>
             <div>
                 <label>RFID (Admin only)</label>
-                <input asp-for="RfidChip" autocomplete="off" />
+                <input asp-for="RfidChip" id="rfid" autocomplete="off" />
+
             </div>
-            <button type="submit">Login</button>
+            <button type="submit" id="loginBtn">Login</button>
         </form>
 
     </div>
 </body>
 </html>
-@if (ViewData.ModelState.Values.Any(v => v.Errors.Count > 0))
+@* All errors except the "3x attempts" *@
+@if (ViewData.ModelState.Values.Any(v => v.Errors.Any(e => !e.ErrorMessage.Contains("3x attempts"))))
 {
     <div class="alert alert-danger">
         @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
         {
-            <p>@error.ErrorMessage</p>
+            if (!error.ErrorMessage.Contains("3x attempts"))
+            {
+                <p>@error.ErrorMessage</p>
+            }
         }
     </div>
+}
+
+@* Countdown ONLY for rate limit *@
+@if (ViewData.ModelState.Values.Any(v => v.Errors.Any(e => e.ErrorMessage.Contains("3x attempts"))))
+{
+    <div class="alert alert-danger">
+        <p id="rateLimitMessage">⏳ Too many login attempts. Try again in <span id="countdown">60</span> seconds.</p>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const username = document.getElementById("username");
+            const password = document.getElementById("password");
+            const rfid = document.getElementById("rfid");
+            const loginBtn = document.getElementById("loginBtn");
+            const countdownDisplay = document.getElementById("countdown");
+
+            username.disabled = true;
+            password.disabled = true;
+            rfid.disabled = true;
+            loginBtn.disabled = true;
+
+            let secondsLeft = 60;
+
+            const timer = setInterval(() => {
+                secondsLeft--;
+                countdownDisplay.textContent = secondsLeft;
+
+                if (secondsLeft <= 0) {
+                    clearInterval(timer);
+                    username.disabled = false;
+                    password.disabled = false;
+                    rfid.disabled = false;
+                    loginBtn.disabled = false;
+
+                    // ✅ Update message
+                    document.getElementById("rateLimitMessage").textContent = "✅ You can try again now.";
+                }
+            }, 1000);
+        });
+    </script>
 }

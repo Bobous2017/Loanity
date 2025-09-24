@@ -7,6 +7,17 @@
 
 <form asp-action="Update" asp-route-id="@Model.Id" method="post">
 
+    @* Feedback for Admin after  failed  to  Update user *@
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div>@error.ErrorMessage</div>
+            }
+        </div>
+    }
+
     <input type="hidden" asp-for="Id" />
 
     <div class="mb-3">
@@ -38,6 +49,7 @@
         <select asp-for="RoleId" asp-items="ViewBag.Roles" class="form-control"></select>
     </div>
 
+    @* Kun admin skal  bekræfte med sin egne password for at performe  update*@
     @if (User.IsInRole("Admin"))
     {
         <div class="mb-3">

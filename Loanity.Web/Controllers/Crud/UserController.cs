@@ -22,8 +22,6 @@ public class UserController : CrudControllerWeb<UserDto>
         ViewBag.Roles = new SelectList(roles, "Id", "Name");
     }
 
-
-
     public override async Task<IActionResult> Create()
     {
         await LoadRolesAsync();
@@ -69,6 +67,12 @@ public class UserController : CrudControllerWeb<UserDto>
 
         if (response.IsSuccessStatusCode)
             return RedirectToAction("Read");
+
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            ModelState.AddModelError("", error); // Show admin password error
+        }
 
         await LoadRolesAsync();
         return View(dto);

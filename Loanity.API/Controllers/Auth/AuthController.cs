@@ -39,80 +39,6 @@ using System.Text;
         }
 
 
-        //[HttpPost("login")]
-        //public IActionResult Login([FromBody] LoginDto dto)
-        //{
-        //    var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
-
-        //    //  1. Validate login FIRST
-        //    var user = _db.Users.FirstOrDefault(u =>
-        //        u.UserName == dto.UserName &&
-        //        u.PassWord == dto.PassWord
-        //    );
-
-        //    // If login is invalid
-        //    if (user == null)
-        //    {
-        //        // Increment failed attempts
-        //        if (LoginAttempts.TryGetValue(ip, out var attempt))
-        //        {
-        //            var (count, lastAttempt) = attempt;
-
-        //            if (DateTime.UtcNow - lastAttempt < COOLDOWN)
-        //            {
-        //                LoginAttempts[ip] = (count + 1, DateTime.UtcNow);
-
-        //                if (count + 1 >= MAX_ATTEMPTS)
-        //                {
-        //                    //return BadRequest("⏳ Too many login attempts. Try again in 1 minute.");
-        //                    return BadRequest("3x attempts");
-        //                }
-        //                LoginAttempts[ip] = (count + 1, DateTime.UtcNow);
-        //            }
-
-        //            else
-        //            {
-        //                // Cooldown expired → reset count
-        //                //LoginAttempts[ip] = (1, DateTime.UtcNow);
-        //                LoginAttempts.Remove(ip);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            // First failed attempt
-        //            LoginAttempts[ip] = (1, DateTime.UtcNow);
-        //        }
-
-        //        return Unauthorized("❌ Invalid login credentials");
-        //    }
-
-        //    //  2. RFID check for Admins
-        //    if (user.RoleId == 1)
-        //    {
-        //        if (string.IsNullOrWhiteSpace(dto.RfidChip) || dto.RfidChip != user.RfidChip)
-        //            return Unauthorized("🔒 RFID is required for Admin login.");
-        //    }
-
-        //    //  3. Success → clear rate limit record
-        //    LoginAttempts.Remove(ip);
-
-        //    //  4. Return user
-        //    var result = new
-        //    {
-        //        user.Id,
-        //        user.FirstName,
-        //        user.LastName,
-        //        user.UserName,
-        //        user.RoleId,
-        //        user.Email,
-        //        user.RfidChip
-        //    };
-
-        //    return Ok(result);
-        //}
-
-
-
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDto dto)
         {
@@ -127,14 +53,14 @@ using System.Text;
             if (user.RoleId == 1 && (string.IsNullOrWhiteSpace(dto.RfidChip) || dto.RfidChip != user.RfidChip))
                 return Unauthorized("🔒 RFID is required for Admin login.");
 
-            // 1. ✅ Create Claims
+            // 1.  Create Claims
             var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Name, user.UserName),
-        new Claim(ClaimTypes.Role, user.RoleId == 1 ? "Admin" : "User")
-    };
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, user.RoleId == 1 ? "Admin" : "User")
+            };
 
-            // 2. ✅ Generate JWT token
+            // 2.  Generate JWT token
             var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -149,7 +75,7 @@ using System.Text;
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var jwt = tokenHandler.WriteToken(token);
 
-            // 3. ✅ Return token (for Postman, mobile, etc.)
+            // 3.  Return token (for Postman, mobile, etc.)
             return Ok(new
             {
                 token = jwt,

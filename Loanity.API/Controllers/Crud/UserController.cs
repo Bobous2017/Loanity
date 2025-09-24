@@ -57,7 +57,7 @@ namespace Loanity.API.Controllers.Crud
         [HttpPut("{id}/dto")] //  Vi bruger Token,  for at ved  hvem vil  ændre password til andre bruger, Authorize, Verifying Hashing, 
         public async Task<IActionResult> UpdateDto(int id, [FromBody] UserDto dto)
         {
-            var currentUserName = User.Identity?.Name;  // now comes from JWT
+            var currentUserName = User.Identity?.Name;  // Nu kommer det fra JWT
             Console.WriteLine("[DEBUG] User.Identity?.Name: " + currentUserName);
 
             var currentUser = await _db.Users.FirstOrDefaultAsync(u => u.UserName == currentUserName);
@@ -86,7 +86,7 @@ namespace Loanity.API.Controllers.Crud
         }
 
 
-        // Optional: keep default GetById if DTO isn't needed
+        // keep default GetById if DTO isn't needed
         // Otherwise, override it the same way as above.  Now
 
     }

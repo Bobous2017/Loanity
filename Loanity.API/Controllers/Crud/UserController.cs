@@ -56,7 +56,7 @@ namespace Loanity.API.Controllers.Crud
 
             return await base.Create(user);
         }
-        // Get UserId by Email with DTO
+        // Get UserId by username with DTO
         [HttpGet("by-username/{username}")]
         public async Task<IActionResult> GetByUserId(string username)
         {

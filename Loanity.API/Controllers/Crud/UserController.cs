@@ -28,7 +28,7 @@ namespace Loanity.API.Controllers.Crud
                 u.UserName,
                 u.PassWord,
                 u.RfidChip,
-                u.Email,
+                u.UserName,
                 u.Phone,
                 u.RoleId,
                 u.Role?.Name
@@ -55,6 +55,22 @@ namespace Loanity.API.Controllers.Crud
             }
 
             return await base.Create(user);
+        }
+        // Get UserId by Email with DTO
+        [HttpGet("by-username/{username}")]
+        public async Task<IActionResult> GetByUserId(string username)
+        {
+            var users = await _db.Users
+                .Where(u => u.UserName == username)
+                .ToListAsync();
+
+            if (users == null || users.Count == 0) return NotFound();
+
+            var dtoList = users.Select(u => new {
+                u.Id
+            }).ToList();
+
+            return Ok(dtoList);
         }
 
         // Optional: keep default GetById if DTO isn't needed

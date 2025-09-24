@@ -2,14 +2,38 @@ using Loanity.Domain;
 using Loanity.Domain.IServices;
 using Loanity.Infrastructure;
 using Loanity.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure EF Core with SQLite
-//builder.Services.AddDbContext<LoanityDbContext>(options =>
-//    options.UseSqlite(builder.Configuration.GetConnectionString("LoanityDb")));
+// Load JWT settings from config
+var jwtConfig = builder.Configuration.GetSection("Jwt");
+var key = Encoding.ASCII.GetBytes(jwtConfig["Key"]);
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.RequireHttpsMetadata = false; // only for development!
+    options.SaveToken = true;
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = true,
+        ValidIssuer = jwtConfig["Issuer"],
+        ValidateAudience = true,
+        ValidAudience = jwtConfig["Audience"],
+        ValidateLifetime = true
+    };
+});
 
 // Configure Sql Server
 builder.Services.AddDbContext<LoanityDbContext>(options =>
@@ -51,6 +75,7 @@ if (app.Environment.IsDevelopment())
 
 // Middleware pipeline
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

@@ -1,9 +1,13 @@
 ﻿
-using Loanity.Web.Controllers.Common;
 using Loanity.Domain.Dtos;
+using Loanity.Domain.Entities;
+using Loanity.Web.Controllers.Common;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Loanity.Domain.Entities;
+using System.Net.Http.Headers;
+using static System.Net.WebRequestMethods;
+
+
 
 namespace Loanity.Web.Controllers;
 
@@ -17,8 +21,6 @@ public class UserController : CrudControllerWeb<UserDto>
         var roles = await _http.GetFromJsonAsync<List<Role>>("api/role");
         ViewBag.Roles = new SelectList(roles, "Id", "Name");
     }
-
-    //public record RoleDto(int Id, string Name);
 
     public override async Task<IActionResult> Create()
     {
@@ -48,12 +50,32 @@ public class UserController : CrudControllerWeb<UserDto>
     public override async Task<IActionResult> Update(int id, UserDto dto)
     {
         dto = dto with { Id = id };
-        var response = await _http.PutAsJsonAsync($"{_baseUrl}/{id}", dto);
+        if (string.IsNullOrWhiteSpace(dto.PassWord))
+        {
+            dto = dto with { PassWord = null };
+        }
+        // Grab  User token  and  Send and Save for later to API
+        var token = HttpContext.Session.GetString("JwtToken");
+        if (!string.IsNullOrEmpty(token))
+        {
+            _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+
+        }
+        
+        var response = await _http.PutAsJsonAsync($"{_baseUrl}/{id}/dto", dto); // Send to 
+
 
         if (response.IsSuccessStatusCode)
             return RedirectToAction("Read");
 
+        if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            var error = await response.Content.ReadAsStringAsync();
+            ModelState.AddModelError("", error); // Show admin password error
+        }
+
         await LoadRolesAsync();
         return View(dto);
     }
+
 }

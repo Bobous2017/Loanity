@@ -41,7 +41,7 @@ namespace Loanity.API.Controllers.Common
 
         // ----------------- UPDATE -----------------
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] TEntity entity)
+        public virtual async Task<IActionResult> Update(int id, [FromBody] TEntity entity)
         {
             _db.Entry(entity).State = EntityState.Modified;
             await _db.SaveChangesAsync();

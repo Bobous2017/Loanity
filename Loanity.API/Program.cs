@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Text.Json.Serialization;
+using System.Configuration; // Add this at the top
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,10 +43,8 @@ builder.Services.AddDbContext<LoanityDbContext>(options =>
 
 builder.Services.AddHttpClient("LoanityApi", client =>
 {
-    //client.BaseAddress = new Uri("http://10.130.56.53:5253/"); // use your API’s actual port
-    client.BaseAddress = new Uri("http://localhost:5253/"); // use your API’s actual port
-
-
+    var baseAddress = System.Configuration.ConfigurationManager.AppSettings["ApiBaseAddress"];
+    client.BaseAddress = new Uri(baseAddress);
 });
 
 // Register your services for Dependency Injection

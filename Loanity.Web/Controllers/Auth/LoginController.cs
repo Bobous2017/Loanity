@@ -27,6 +27,14 @@ namespace Loanity.Web.Controllers.Auth
             return View(new LoginDto());
         }
 
+        //[HttpGet("timer")]
+        //public IActionResult GetTimer()
+        //{
+        //    var sessionTimer = SessionTimer.SessionTimeoutSeconds;
+        //    var timer = new { num = sessionTimer };
+        //    return Ok(timer);
+        //}
+
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto model)
         {

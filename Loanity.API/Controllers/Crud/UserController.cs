@@ -51,29 +51,13 @@ namespace Loanity.API.Controllers.Crud
 
             return await base.Create(user);
         }
-        // Get UserId by Email with DTO
-        [HttpGet("by-username/{username}")]
-        public async Task<IActionResult> GetByUserId(string username)
-        {
-            var users = await _db.Users
-                .Where(u => u.UserName == username)
-                .ToListAsync();
-
-            if (users == null || users.Count == 0) return NotFound();
-
-            var dtoList = users.Select(u => new {
-                u.Id
-            }).ToList();
-
-            return Ok(dtoList);
-        }
 
 
         [Authorize]
         [HttpPut("{id}/dto")] //  Vi bruger Token,  for at ved  hvem vil  ændre password til andre bruger, Authorize, Verifying Hashing, 
         public async Task<IActionResult> UpdateDto(int id, [FromBody] UserDto dto)
         {
-            var currentUserName = User.Identity?.Name;  // now comes from JWT
+            var currentUserName = User.Identity?.Name;  // Nu kommer det fra JWT
             Console.WriteLine("[DEBUG] User.Identity?.Name: " + currentUserName);
 
             var currentUser = await _db.Users.FirstOrDefaultAsync(u => u.UserName == currentUserName);
@@ -100,10 +84,28 @@ namespace Loanity.API.Controllers.Crud
             await _db.SaveChangesAsync();
             return NoContent();
         }
+        // Get UserId by username with DTO
+        [HttpGet("by-username/{username}")]
+        public async Task<IActionResult> GetByUserId(string username)
+        {
+            var users = await _db.Users
+                .Where(u => u.UserName == username)
+                .ToListAsync();
+
+            if (users == null || users.Count == 0) return NotFound();
+
+            var dtoList = users.Select(u => new {
+                u.Id, 
+                u.UserName,
+                u.FirstName,
+                u.LastName,
+                u.Email,
+                u.Phone,
+                u.RoleId
+            }).ToList();
 
 
-        // Optional: keep default GetById if DTO isn't needed
-        // Otherwise, override it the same way as above.  Now
-
+            return Ok(dtoList);
+        }
     }
 }

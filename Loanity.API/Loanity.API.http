@@ -1,5 +1,5 @@
-# @Loanity.API_HostAddress = http://10.130.56.53:5253
-@Loanity.API_HostAddress = http://localhost:5253
+@Loanity.API_HostAddress = http://10.130.56.53:5253
+# @Loanity.API_HostAddress = http://localhost:5253
 
 
 GET {{Loanity.API_HostAddress}}/weatherforecast/

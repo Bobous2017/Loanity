@@ -3,12 +3,12 @@
     using global::Loanity.Infrastructure;
     using Loanity.Domain.Dtos;
     using Loanity.Infrastructure;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+    using Microsoft.AspNetCore.Authorization;
+    using Microsoft.AspNetCore.Mvc;
+    using Microsoft.IdentityModel.Tokens;
+    using System.IdentityModel.Tokens.Jwt;
+    using System.Security.Claims;
+    using System.Text;
 
     namespace Loanity.API.Controllers.Auth
     {
@@ -39,28 +39,56 @@ using System.Text;
         }
 
 
+       
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDto dto)
         {
+            // Get client IP (you can customize this if behind reverse proxy)
+            var ip = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+
+            // Check rate limit
+            if (LoginAttempts.TryGetValue(ip, out var info))
+            {
+                if (info.Count >= MAX_ATTEMPTS && DateTime.UtcNow - info.LastAttempt < COOLDOWN)
+                {
+                    return Unauthorized("3x attempts"); // Besked  key til Razor at vise countdown
+                }
+            }
+
+            // Authenticate user
             var user = _db.Users.FirstOrDefault(u =>
                 u.UserName == dto.UserName &&
                 u.PassWord == dto.PassWord);
 
             if (user == null)
-                return Unauthorized("Invalid credentials");
-
-            // RFID check for Admins
-            if (user.RoleId == 1 && (string.IsNullOrWhiteSpace(dto.RfidChip) || dto.RfidChip != user.RfidChip))
-                return Unauthorized("🔒 RFID is required for Admin login.");
-
-            // 1.  Create Claims
-            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, user.RoleId == 1 ? "Admin" : "User")
-            };
+                // Record failed attempt
+                if (!LoginAttempts.ContainsKey(ip))
+                    LoginAttempts[ip] = (1, DateTime.UtcNow);
+                else
+                    LoginAttempts[ip] = (LoginAttempts[ip].Count + 1, DateTime.UtcNow);
 
-            // 2.  Generate JWT token
+                return Unauthorized("Invalid credentials");
+            }
+
+            // Check RFID for Admins
+            if (user.RoleId == 1 && (string.IsNullOrWhiteSpace(dto.RfidChip) || dto.RfidChip != user.RfidChip))
+            {
+                return Unauthorized("🔒 RFID is required for Admin login.");
+            }
+
+            // Successful login: clear failed attempts
+            if (LoginAttempts.ContainsKey(ip))
+                LoginAttempts.Remove(ip);
+
+            // Create Claims
+            var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Role, user.RoleId == 1 ? "Admin" : "User")
+                };
+
+            // Create Token
             var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -75,7 +103,7 @@ using System.Text;
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var jwt = tokenHandler.WriteToken(token);
 
-            // 3.  Return token (for Postman, mobile, etc.)
+            // Return result
             return Ok(new
             {
                 token = jwt,
@@ -90,6 +118,7 @@ using System.Text;
                 }
             });
         }
+
 
     }
 

@@ -67,14 +67,16 @@ namespace Loanity.API.Controllers.Crud
             if (users == null || users.Count == 0) return NotFound();
 
             var dtoList = users.Select(u => new {
-                u.Id
+                u.Id, 
+                u.UserName,
+                u.FirstName,
+                u.LastName,
+                u.Email,
+                u.Phone,
+                u.RoleId
             }).ToList();
 
             return Ok(dtoList);
         }
-
-        // Optional: keep default GetById if DTO isn't needed
-        // Otherwise, override it the same way as above.  Now
-
     }
 }

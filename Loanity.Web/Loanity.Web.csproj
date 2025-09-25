@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Folder Include="Controllers\Actions\" />
+    <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -30,7 +30,7 @@ namespace Loanity.API.Controllers.Crud
                 u.UserName,
                 u.PassWord,
                 u.RfidChip,
-                u.Email,
+                u.UserName,
                 u.Phone,
                 u.RoleId,
                 u.Role?.Name,
@@ -84,10 +84,28 @@ namespace Loanity.API.Controllers.Crud
             await _db.SaveChangesAsync();
             return NoContent();
         }
+        // Get UserId by username with DTO
+        [HttpGet("by-username/{username}")]
+        public async Task<IActionResult> GetByUserId(string username)
+        {
+            var users = await _db.Users
+                .Where(u => u.UserName == username)
+                .ToListAsync();
+
+            if (users == null || users.Count == 0) return NotFound();
+
+            var dtoList = users.Select(u => new {
+                u.Id, 
+                u.UserName,
+                u.FirstName,
+                u.LastName,
+                u.Email,
+                u.Phone,
+                u.RoleId
+            }).ToList();
 
 
-        // keep default GetById if DTO isn't needed
-        // Otherwise, override it the same way as above.  Now
-
+            return Ok(dtoList);
+        }
     }
 }

@@ -15,16 +15,51 @@ namespace Loanity.Infrastructure.Services
     {
         private readonly LoanityDbContext _db;
         public LoanService(LoanityDbContext db) => _db = db;
-    
+
+        //public async Task<Loan> CreateLoanFromScanAsync(int userId, string qrCode, DateTime dueAt)
+        //{
+        //    var item = await _db.Equipment.SingleOrDefaultAsync(e => e.QrCode == qrCode);
+        //    if (item is null) throw new InvalidOperationException("Device not found");
+
+        //    //if (item.Status is not EquipmentStatus.Available)
+        //    //    throw new InvalidOperationException("Device not available");
+
+        //    if (item.Status != EquipmentStatus.Available && item.Status != EquipmentStatus.Reserved)
+        //        throw new InvalidOperationException("Device not available");
+
+
+        //    var loan = new Loan { UserId = userId, DueAt = dueAt,  Status = LoanStatus.Active };
+        //    loan.Items.Add(new LoanItem { Loan = loan, Equipment = item });
+
+        //    item.Status = EquipmentStatus.Loaned;
+
+        //    _db.Loans.Add(loan);
+        //    await _db.SaveChangesAsync();
+        //    return loan;
+        //}
         public async Task<Loan> CreateLoanFromScanAsync(int userId, string qrCode, DateTime dueAt)
         {
             var item = await _db.Equipment.SingleOrDefaultAsync(e => e.QrCode == qrCode);
             if (item is null) throw new InvalidOperationException("Device not found");
 
-            if (item.Status is not EquipmentStatus.Available)
+            // Tillad både Available and Reserved status
+            if (item.Status != EquipmentStatus.Available && item.Status != EquipmentStatus.Reserved)
                 throw new InvalidOperationException("Device not available");
 
-            var loan = new Loan { UserId = userId, DueAt = dueAt,  Status = LoanStatus.Active };
+            // Hvis den er reservere, check if the user is the one who reserved it 
+            if (item.Status == EquipmentStatus.Reserved)
+            {
+                var reservation = await _db.Reservations
+                    .FirstOrDefaultAsync(r => r.EquipmentId == item.Id && r.UserId == userId && r.Status == ReservationStatus.Active);
+
+                if (reservation is null)
+                    throw new InvalidOperationException("You did not reserve this item.");
+
+                // Reservation bliver fulfilled  fordi  Equipement Status blive loaned
+                reservation.Status = ReservationStatus.Fulfilled;
+            }
+
+            var loan = new Loan { UserId = userId, DueAt = dueAt, Status = LoanStatus.Active };
             loan.Items.Add(new LoanItem { Loan = loan, Equipment = item });
 
             item.Status = EquipmentStatus.Loaned;
@@ -33,6 +68,7 @@ namespace Loanity.Infrastructure.Services
             await _db.SaveChangesAsync();
             return loan;
         }
+
         public async Task<Loan?> ReturnByScanAsync(int userId, string qrCode)
         {
             var item = await _db.Equipment.SingleOrDefaultAsync(e => e.QrCode == qrCode);

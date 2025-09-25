@@ -16,27 +16,6 @@ namespace Loanity.Infrastructure.Services
         private readonly LoanityDbContext _db;
         public LoanService(LoanityDbContext db) => _db = db;
 
-        //public async Task<Loan> CreateLoanFromScanAsync(int userId, string qrCode, DateTime dueAt)
-        //{
-        //    var item = await _db.Equipment.SingleOrDefaultAsync(e => e.QrCode == qrCode);
-        //    if (item is null) throw new InvalidOperationException("Device not found");
-
-        //    //if (item.Status is not EquipmentStatus.Available)
-        //    //    throw new InvalidOperationException("Device not available");
-
-        //    if (item.Status != EquipmentStatus.Available && item.Status != EquipmentStatus.Reserved)
-        //        throw new InvalidOperationException("Device not available");
-
-
-        //    var loan = new Loan { UserId = userId, DueAt = dueAt,  Status = LoanStatus.Active };
-        //    loan.Items.Add(new LoanItem { Loan = loan, Equipment = item });
-
-        //    item.Status = EquipmentStatus.Loaned;
-
-        //    _db.Loans.Add(loan);
-        //    await _db.SaveChangesAsync();
-        //    return loan;
-        //}
         public async Task<Loan> CreateLoanFromScanAsync(int userId, string qrCode, DateTime dueAt)
         {
             var item = await _db.Equipment.SingleOrDefaultAsync(e => e.QrCode == qrCode);

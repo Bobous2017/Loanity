@@ -4,30 +4,42 @@
     ViewData["Title"] = "Create Reservation";
 }
 
-<h2>Create Reservation</h2>
+<h2 class="text-2xl font-bold text-gray-800 mb-6">Create Reservation</h2>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="UserId"></label>
-        <input asp-for="UserId" class="form-control" />
+<form asp-action="Create" method="post"
+      class="bg-white shadow rounded-lg p-6 space-y-4">
+
+    <div>
+        <label asp-for="UserId" class="block font-medium text-gray-700"></label>
+        <input asp-for="UserId" class="w-full border rounded-lg px-3 py-2" />
     </div>
-    <div class="form-group">
-        <label asp-for="EquipmentId"></label>
-        <input asp-for="EquipmentId" class="form-control" />
+    <div>
+        <label asp-for="EquipmentId" class="block font-medium text-gray-700"></label>
+        <input asp-for="EquipmentId" class="w-full border rounded-lg px-3 py-2" />
     </div>
-    <div class="form-group">
-        <label asp-for="StartAt"></label>
-        <input asp-for="StartAt" type="datetime-local" class="form-control" />
+    <div>
+        <label asp-for="StartAt" class="block font-medium text-gray-700"></label>
+        <input asp-for="StartAt" type="datetime-local"
+               class="w-full border rounded-lg px-3 py-2" />
     </div>
-    <div class="form-group">
-        <label asp-for="EndAt"></label>
-        <input asp-for="EndAt" type="datetime-local" class="form-control" />
+    <div>
+        <label asp-for="EndAt" class="block font-medium text-gray-700"></label>
+        <input asp-for="EndAt" type="datetime-local"
+               class="w-full border rounded-lg px-3 py-2" />
     </div>
-    <div class="form-group">
-        <label asp-for="Status"></label>
-        <input asp-for="Status" class="form-control" />
+    <div>
+        <label asp-for="Status" class="block font-medium text-gray-700"></label>
+        <input asp-for="Status" class="w-full border rounded-lg px-3 py-2" />
     </div>
 
-    <button type="submit" class="btn btn-primary">Create</button>
-    <a asp-action="Read" class="btn btn-secondary">Cancel</a>
+    <div class="flex gap-4 mt-6">
+        <button type="submit"
+                class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">
+            Create
+        </button>
+        <a asp-action="Read"
+           class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
+            Cancel
+        </a>
+    </div>
 </form>

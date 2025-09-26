@@ -5,79 +5,119 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Loanity.Web</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Loanity.Web.styles.css" asp-append-version="true" />
-</head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Loanity.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Read">User</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Equipment" asp-action="Read">Equipment</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Reservation" asp-action="Read">Reservation</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Loan" asp-action="Read">Loan</a>
 
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <form asp-controller="Login" asp-action="Logout" method="post" style="display:inline">
-                                <button type="submit" class="btn btn-link">Logout</button>
-                            </form>
-                        }
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <span class="navbar-text">
-                                👋 Hello, @User.Identity.Name!
-                            </span>
-                        }
-                    </ul>
-                </div>
+    <!-- TailwindCSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome 6 Free -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+          referrerpolicy="no-referrer" />
+
+    <style>
+        .card {
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,.12);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 flex flex-col min-h-screen">
+
+    <!-- Navbar -->
+    <header>
+        <nav class="bg-white shadow-md px-6 py-4 flex justify-between items-center">
+            <!-- Logo + Title -->
+            <div class="flex items-center gap-3">
+                <img src="/img/loanityIcon.png" alt="Loanity Logo"
+                     class="w-10 h-10 rounded-full object-cover shadow-sm" />
+                <a class="text-xl text-indigo-600" asp-area="" asp-controller="Home" asp-action="Index">
+                    Loanity
+                </a>
+            </div>
+
+            <!-- Navigation Links -->
+            <ul id="navMenu" class="hidden md:flex gap-6 text-gray-700 font-medium">
+                <li><a class="text-xl text-indigo-600 hover:text-indigo-600" asp-controller="Home" asp-action="Index">Dashboard Admin</a></li>
+                <li><a class="hover:text-indigo-600" asp-controller="User" asp-action="Read">User</a></li>
+                <li><a class="hover:text-indigo-600" asp-controller="Equipment" asp-action="Read">Equipment</a></li>
+                <li><a class="hover:text-indigo-600" asp-controller="Reservation" asp-action="Read">Reservation</a></li>
+                <li><a class="hover:text-indigo-600" asp-controller="Loan" asp-action="Read">Loan</a></li>
+                <li><a class="hover:text-indigo-600" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+            </ul>
+            <!-- Hamburger button (mobile only) -->
+            <button id="menuToggle" class="md:hidden text-gray-700">
+                <i class="fa fa-bars fa-lg"></i>
+            </button>
+            <!-- Right Section -->
+            <div class="flex items-center gap-4">
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <form asp-controller="Login" asp-action="Logout" method="post">
+                        <button type="submit" class="text-red-500 hover:underline">Logout</button>
+                    </form>
+                    <span id="welcomeMessage" class="text-gray-600">👋 Hello</span>
+                    <span class="text-gray-600 font-medium">@User.Identity.Name!</span>
+                }
+                else
+                {
+                    <a class="text-indigo-600 font-semibold hover:underline" asp-controller="Login" asp-action="Index">Login</a>
+                }
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Loanity.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    <!-- Main Content -->
+    <main role="main" class="flex-1 p-6">
+        @RenderBody()
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-6 mt-auto">
+        <p>
+            &copy; 2025 - Loanity.Dashboard Admin -
+            <a class="hover:underline text-indigo-300" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </p>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        // Redirect user to Login after session timeout
+        const timer = @SessionTimer.SessionTimeoutSeconds;
+        setTimeout(() => window.location.href = '/Login', timer * 1000);
+
+         // Load  menu  for mobile
+        document.getElementById("menuToggle").addEventListener("click", () => {
+            const menu = document.getElementById("navMenu");
+            menu.classList.toggle("hidden");
+            menu.classList.toggle("flex");
+            menu.classList.toggle("flex-col");
+            menu.classList.toggle("absolute");
+            menu.classList.toggle("top-16");
+            menu.classList.toggle("left-0");
+            menu.classList.toggle("bg-white");
+            menu.classList.toggle("shadow-lg");
+            menu.classList.toggle("w-full");
+            menu.classList.toggle("p-4");
+        });
+    
+        // Skjule hello  besked after 3 seconds første gang login
+            document.addEventListener("DOMContentLoaded", () => {
+            const welcome = document.getElementById("welcomeMessage");
+            if (welcome) {
+                setTimeout(() => {
+                    welcome.style.transition = "opacity 0.5s ease";
+                    welcome.style.opacity = "0";
+                    setTimeout(() => welcome.remove(), 500);
+                }, 3000);
+            }
+        });
+
+
+    </script>
 </body>
-<script>
-    //  Redirect user to Login after (1) minute 
-    const timer = @SessionTimer.SessionTimeoutSeconds;
-    setTimeout(() => window.location.href = '/Login', timer * 1000);
-
-
-</script>
-
 </html>

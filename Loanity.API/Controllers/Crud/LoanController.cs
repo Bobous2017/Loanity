@@ -4,6 +4,7 @@ using Loanity.Domain.Entities;
 using Loanity.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static System.Net.WebRequestMethods;
 
 namespace Loanity.API.Controllers.Crud
 {
@@ -95,5 +96,8 @@ namespace Loanity.API.Controllers.Crud
 
             return Ok(dtoList);
         }
+
+     
+
     }
 }

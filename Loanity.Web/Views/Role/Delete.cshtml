@@ -3,15 +3,23 @@
     ViewData["Title"] = "Delete Role";
 }
 
-<h2>Delete Role</h2>
-<h4>Are you sure you want to delete this role?</h4>
+<h2 class="text-2xl font-bold text-gray-800 mb-6">Delete Role</h2>
 
-<div>
-    <h5>@Model.Name</h5>
+<div class="bg-white shadow rounded-lg p-6">
+    <p class="mb-4 text-gray-700">
+        Are you sure you want to delete the role
+        <strong class="text-red-600">@Model.Name</strong>?
+    </p>
+
+    <form asp-action="Delete" method="post" class="flex gap-4">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit"
+                class="px-4 py-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700">
+            Delete
+        </button>
+        <a asp-action="Read"
+           class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
+            Cancel
+        </a>
+    </form>
 </div>
-
-<form asp-action="Delete">
-    <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-danger">Delete</button>
-    <a asp-action="Read" class="btn btn-secondary">Cancel</a>
-</form>

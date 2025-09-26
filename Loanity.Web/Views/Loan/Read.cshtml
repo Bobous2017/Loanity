@@ -1,41 +1,66 @@
-﻿@* Views/Loan/Read.cshtml *@
-@model IEnumerable<Loanity.Domain.Dtos.LoanDto>
+﻿@model IEnumerable<Loanity.Domain.Dtos.LoanDto>
 
 @{
     ViewData["Title"] = "Loans";
 }
 
-<h2>Loans</h2>
+<h2 class="text-2xl font-bold text-gray-800 mb-6">Loans</h2>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Loan Id</th>
-            <th>User Id</th>
-            <th>Start At</th>
-            <th>Due At</th>
-            <th>Returned At</th>
-            <th>Status</th>
-            <th>Items</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var loan in Model)
-        {
+<div class="overflow-x-auto bg-white shadow rounded-lg">
+    <table class="w-full border-collapse">
+        <thead class="bg-gray-100 text-gray-700">
             <tr>
-                <td>@loan.Id</td>
-                <td>@loan.UserId</td>
-                <td>@loan.StartAt.ToString("dd.MM.yyyy HH.mm.ss")</td>
-                <td>@loan.DueAt.ToString("dd.MM.yyyy HH.mm.ss")</td>
-                <td>@(loan.ReturnedAt?.ToString("dd.MM.yyyy HH.mm.ss") ?? "Not Returned")</td>
-                <td>@loan.Status</td>
-                <td>
-                    @foreach (var item in loan.Items)
-                    {
-                        <span class="badge bg-info">@item.EquipmentId</span>
-                    }
-                </td>
+                <th class="px-4 py-2 text-left">Loan Id</th>
+                <th class="px-4 py-2 text-left">User Id</th>
+                <th class="px-4 py-2 text-left">Start At</th>
+                <th class="px-4 py-2 text-left">Due At</th>
+                <th class="px-4 py-2 text-left">Returned At</th>
+                <th class="px-4 py-2 text-left">Status</th>
+                <th class="px-4 py-2 text-left">Items</th>
+                <th class="px-4 py-2 text-left">Action</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var loan in Model)
+            {
+                <tr class="border-t hover:bg-gray-50">
+                    <td class="px-4 py-2">@loan.Id</td>
+                    <td class="px-4 py-2">@loan.UserId</td>
+                    <td class="px-4 py-2">@loan.StartAt.ToString("dd.MM.yyyy HH.mm.ss")</td>
+                    <td class="px-4 py-2">@loan.DueAt.ToString("dd.MM.yyyy HH.mm.ss")</td>
+                    <td class="px-4 py-2">
+                        @(loan.ReturnedAt?.ToString("dd.MM.yyyy HH.mm.ss") ??
+                                            "<span class='text-gray-400 italic'>Not Returned</span>")
+                                                                                                 </td>
+                                                                                                 <td class="px-4 py-2">
+                                                                                                     <span class="px-2 py-1 rounded text-sm
+                                         @(loan.Status == "Active" ? "bg-green-100 text-green-700" :
+                                                                     loan.Status == "Overdue" ? "bg-red-100 text-red-700" :
+                                                                     "bg-gray-100 text-gray-600")">
+                        @loan.Status
+                    </span>
+                </td>
+                <td class="px-4 py-2 space-x-1">
+                    @foreach (var item in loan.Items)
+                        {
+                            <span class="inline-block px-2 py-1 bg-indigo-100 text-indigo-700 rounded text-xs">
+                                @item.EquipmentId
+                            </span>
+                        }
+                    </td>
+                    <td class="px-4 py-2 space-x-2">
+                        <form asp-action="Delete" asp-route-id="@loan.Id" method="post" class="inline">
+                            <button type="submit"
+                                    class="px-3 py-1 bg-red-600 text-white rounded-lg shadow hover:bg-red-700 text-sm"
+                                    onclick="return confirm('Are you sure you want to delete this loan?');">
+                                Delete
+                            </button>
+                        </form>
+                    </td>
+
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</div>

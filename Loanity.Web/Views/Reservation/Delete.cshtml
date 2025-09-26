@@ -4,31 +4,30 @@
     ViewData["Title"] = "Delete Reservation";
 }
 
-<h2>Delete Reservation</h2>
+<h2 class="text-2xl font-bold text-gray-800 mb-6">Delete Reservation</h2>
 
-<div>
-    <h4>Are you sure you want to delete this reservation?</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">User ID</dt>
-        <dd class="col-sm-10">@Model.UserId</dd>
+<div class="bg-white shadow rounded-lg p-6">
+    <p class="mb-4 text-gray-700">
+        Are you sure you want to delete this reservation?
+    </p>
 
-        <dt class="col-sm-2">Equipment ID</dt>
-        <dd class="col-sm-10">@Model.EquipmentId</dd>
+    <ul class="mb-6 space-y-2 text-gray-600">
+        <li><strong>User Id:</strong> @Model.UserId</li>
+        <li><strong>Equipment Id:</strong> @Model.EquipmentId</li>
+        <li><strong>Start:</strong> @Model.StartAt</li>
+        <li><strong>End:</strong> @Model.EndAt</li>
+        <li><strong>Status:</strong> @Model.Status</li>
+    </ul>
 
-        <dt class="col-sm-2">Start</dt>
-        <dd class="col-sm-10">@Model.StartAt</dd>
-
-        <dt class="col-sm-2">End</dt>
-        <dd class="col-sm-10">@Model.EndAt</dd>
-
-        <dt class="col-sm-2">Status</dt>
-        <dd class="col-sm-10">@Model.Status</dd>
-    </dl>
-
-    <form asp-action="Delete" method="post">
+    <form asp-action="Delete" method="post" class="flex gap-4">
         <input type="hidden" asp-for="Id" />
-        <button type="submit" class="btn btn-danger">Delete</button>
-        <a asp-action="Read" class="btn btn-secondary">Cancel</a>
+        <button type="submit"
+                class="px-4 py-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700">
+            Delete
+        </button>
+        <a asp-action="Read"
+           class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
+            Cancel
+        </a>
     </form>
 </div>

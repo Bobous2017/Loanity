@@ -1,27 +1,46 @@
 ﻿@model Loanity.Domain.Dtos.EquipmentDto
 
-<h2>Create Equipment</h2>
+<h2 class="text-2xl font-bold text-gray-800 mb-6">Create Equipment</h2>
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post"
+      class="bg-white shadow rounded-lg p-6 space-y-4">
+
     <div>
-        <label>Name</label>
-        <input asp-for="Name" />
+        <label asp-for="Name" class="block font-medium text-gray-700"></label>
+        <input asp-for="Name" class="w-full border rounded-lg px-3 py-2" />
     </div>
+
     <div>
-        <label>Serial Number</label>
-        <input asp-for="SerialNumber" />
+        <label asp-for="SerialNumber" class="block font-medium text-gray-700"></label>
+        <input asp-for="SerialNumber" class="w-full border rounded-lg px-3 py-2" />
     </div>
+
     <div>
-        <label>QR Code</label>
-        <input asp-for="QrCode" />
+        <label asp-for="QrCode" class="block font-medium text-gray-700"></label>
+        <input asp-for="QrCode" class="w-full border rounded-lg px-3 py-2" />
     </div>
+
     <div>
-        <label>Status</label>
-        <select asp-for="Status" asp-items="Html.GetEnumSelectList<Loanity.Domain.Statuses.EquipmentStatus>()"></select>
+        <label asp-for="Status" class="block font-medium text-gray-700"></label>
+        <select asp-for="Status"
+                asp-items="Html.GetEnumSelectList<Loanity.Domain.Statuses.EquipmentStatus>()"
+                class="w-full border rounded-lg px-3 py-2"></select>
     </div>
+
     <div>
-        <label>Category</label>
-        <select asp-for="CategoryId" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))"></select>
+        <label asp-for="CategoryId" class="block font-medium text-gray-700"></label>
+        <select asp-for="CategoryId" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))"
+                class="w-full border rounded-lg px-3 py-2"></select>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
+
+    <div class="flex gap-4 mt-6">
+        <button type="submit"
+                class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">
+            Save
+        </button>
+        <a asp-action="Read"
+           class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
+            Cancel
+        </a>
+    </div>
 </form>

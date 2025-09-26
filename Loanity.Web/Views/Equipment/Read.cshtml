@@ -1,35 +1,52 @@
 ﻿@model List<Loanity.Domain.Dtos.EquipmentDto>
 
-<h2>Read Equipment List</h2>
+<h2 class="text-2xl font-bold text-gray-800 mb-6">Equipment List</h2>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">+ Create New</a>
-</p>
-<a asp-controller="Category" asp-action="Create" class="btn btn-sm btn-outline-secondary mb-2">+ Add New Category</a>
+<div class="flex gap-4 mb-6">
+    <a asp-action="Create"
+       class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">
+        + Create New
+    </a>
+    <a asp-controller="Category" asp-action="Create"
+       class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100">
+        + Add New Category
+    </a>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Serial Number</th>
-            <th>QR Code</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<div class="overflow-x-auto bg-white shadow rounded-lg">
+    <table class="w-full border-collapse">
+        <thead class="bg-gray-100 text-gray-700">
             <tr>
-                <td>@item.Name</td>
-                <td>@item.SerialNumber</td>
-                <td>@item.QrCode</td>
-                <td>@item.Status</td>
-                <td>
-                    <a asp-action="Update" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <th class="px-4 py-2 text-left">Name</th>
+                <th class="px-4 py-2 text-left">Serial Number</th>
+                <th class="px-4 py-2 text-left">QR Code</th>
+                <th class="px-4 py-2 text-left">Status</th>
+                <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr class="border-t hover:bg-gray-50">
+                    <td class="px-4 py-2">@item.Name</td>
+                    <td class="px-4 py-2">@item.SerialNumber</td>
+                    <td class="px-4 py-2">@item.QrCode</td>
+                    <td class="px-4 py-2">
+                        <span class="px-2 py-1 rounded text-sm
+                                         @(item.Status == Loanity.Domain.Statuses.EquipmentStatus.Available ? "bg-green-100 text-green-700" :
+                                                                     item.Status == Loanity.Domain.Statuses.EquipmentStatus.Reserved ? "bg-yellow-100 text-yellow-700" :
+                                                                     "bg-gray-100 text-gray-600")">
+                        @item.Status
+                    </span>
+                </td>
+                <td class="px-4 py-2 space-x-2">
+                    <a asp-action="Update" asp-route-id="@item.Id"
+                       class="text-indigo-600 hover:underline">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id"
+                       class="text-red-600 hover:underline">Delete</a>
                 </td>
             </tr>
-        }
-    </tbody>
-</table>
+                        }
+        </tbody>
+    </table>
+</div>

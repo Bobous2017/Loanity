@@ -3,11 +3,24 @@
     ViewData["Title"] = "Delete User";
 }
 
-<h2>Are you sure?</h2>
-<p><strong>@Model.FirstName @Model.LastName</strong> - @Model.Email</p>
+<h2 class="text-2xl font-bold text-gray-800 mb-6">Delete User</h2>
 
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="Id" />
-    <button class="btn btn-danger">Delete</button>
-    <a asp-action="Read" class="btn btn-secondary">Cancel</a>
-</form>
+<div class="bg-white shadow rounded-lg p-6">
+    <p class="mb-4 text-gray-700">
+        Are you sure you want to delete
+        <strong>@Model.FirstName @Model.LastName</strong>
+        (<span class="text-gray-500">@Model.Email</span>)?
+    </p>
+
+    <form asp-action="Delete" method="post" class="flex gap-4">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit"
+                class="px-4 py-2 bg-red-600 text-white rounded-lg shadow hover:bg-red-700">
+            Delete
+        </button>
+        <a asp-action="Read"
+           class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
+            Cancel
+        </a>
+    </form>
+</div>

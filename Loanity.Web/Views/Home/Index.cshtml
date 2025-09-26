@@ -3,6 +3,82 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+   @*  <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p> *@
+    <!-- Hero Section -->
+    <header class="text-center py-20 bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+    <h1 class="text-4xl md:text-5xl font-bold mb-4">Welcome to Loanity</h1>
+    <p class="text-lg mb-6">Manage Users, Equipment, Reservations, and Loans easily.</p>
+    <div class="space-x-4">
+        <a href="#categories"
+           class="px-6 py-3 bg-white text-indigo-600 font-semibold rounded-lg shadow hover:bg-gray-100">
+            Explore Categories
+        </a>
+        <a href="#"
+           class="px-6 py-3 bg-indigo-800 text-white font-semibold rounded-lg shadow hover:bg-indigo-900">
+            Get Started
+        </a>
+    </div>
+</header>
+    <!-- Categories Section -->
+    <main class="flex-1 p-10" id="categories">
+        <h2 class="text-2xl font-bold text-gray-800 mb-8 text-center">Equipment Categories</h2>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            <div class="card bg-white rounded-xl p-6 text-center">
+                <i class="fa-solid fa-laptop fa-2x text-indigo-600 mb-3"></i>
+                <h3 class="font-semibold">Laptops</h3>
+            </div>
+            <div class="card bg-white rounded-xl p-6 text-center">
+                <i class="fa-solid fa-tablet-screen-button fa-2x text-green-600 mb-3"></i>
+                <h3 class="font-semibold">Tablets</h3>
+            </div>
+            <div class="card bg-white rounded-xl p-6 text-center">
+                <i class="fa-solid fa-mobile-screen-button fa-2x text-blue-600 mb-3"></i>
+                <h3 class="font-semibold">Phones</h3>
+            </div>
+            <div class="card bg-white rounded-xl p-6 text-center">
+                <i class="fa-solid fa-keyboard fa-2x text-purple-600 mb-3"></i>
+                <h3 class="font-semibold">Keyboards</h3>
+            </div>
+            <div class="card bg-white rounded-xl p-6 text-center">
+                <i class="fa-solid fa-computer-mouse fa-2x text-gray-700 mb-3"></i>
+                <h3 class="font-semibold">Mouse</h3>
+            </div>
+            <div class="card bg-white rounded-xl p-6 text-center">
+                <i class="fa-solid fa-print fa-2x text-pink-600 mb-3"></i>
+                <h3 class="font-semibold">Printers</h3>
+            </div>
+            <div class="card bg-white rounded-xl p-6 text-center">
+                <i class="fa-solid fa-hard-drive fa-2x text-yellow-600 mb-3"></i>
+                <h3 class="font-semibold">Storage</h3>
+            </div>
+            <div class="card bg-white rounded-xl p-6 text-center">
+                <i class="fa-solid fa-camera fa-2x text-red-500 mb-3"></i>
+                <h3 class="font-semibold">Cameras</h3>
+            </div>
+            <div class="card bg-white rounded-xl p-6 text-center">
+                <i class="fa-solid fa-headset fa-2x text-emerald-600 mb-3"></i>
+                <h3 class="font-semibold">Headsets</h3>
+            </div>
+            <div class="card bg-white rounded-xl p-6 text-center">
+                <i class="fa-solid fa-network-wired fa-2x text-sky-600 mb-3"></i>
+                <h3 class="font-semibold">Networking</h3>
+            </div>
+            <div class="card bg-white rounded-xl p-6 text-center">
+                <i class="fa-solid fa-cloud fa-2x text-cyan-600 mb-3"></i>
+                <h3 class="font-semibold">Cloud</h3>
+            </div>
+            <div class="card bg-white rounded-xl p-6 text-center">
+                <i class="fa-solid fa-desktop fa-2x text-indigo-400 mb-3"></i>
+                <h3 class="font-semibold">Monitors</h3>
+            </div>
+            <div class="card bg-white rounded-xl p-6 text-center">
+                <i class="fa-solid fa-gamepad fa-2x text-orange-500 mb-3"></i>
+                <h3 class="font-semibold">Gaming</h3>
+            </div>
+        </div>
+    </main>
 </div>
+
+

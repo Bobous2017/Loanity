@@ -2,13 +2,26 @@
 @{
     ViewData["Title"] = "Create Category";
 }
-<h2>Create Category</h2>
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+
+<h2 class="text-2xl font-bold text-gray-800 mb-6">Create Category</h2>
+
+<form asp-action="Create" method="post"
+      class="bg-white shadow rounded-lg p-6 space-y-4">
+
+    <div>
+        <label asp-for="Name" class="block font-medium text-gray-700"></label>
+        <input asp-for="Name" class="w-full border rounded-lg px-3 py-2" />
+        <span asp-validation-for="Name" class="text-red-600"></span>
     </div>
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-action="Read" class="btn btn-secondary">Cancel</a>
+
+    <div class="flex gap-4 mt-6">
+        <button type="submit"
+                class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">
+            Save
+        </button>
+        <a asp-action="Read"
+           class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
+            Cancel
+        </a>
+    </div>
 </form>

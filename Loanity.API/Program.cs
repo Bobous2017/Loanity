@@ -50,6 +50,7 @@ builder.Services.AddHttpClient("LoanityApi", client =>
 // Register your services for Dependency Injection
 builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<IReservationService, ReservationService>(); // Step 4
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 
 

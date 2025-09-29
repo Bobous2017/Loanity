@@ -1,0 +1,166 @@
+﻿:root {
+    --pending: #ff6a00;
+    --active: #45e000;
+    --cancelled: #ff3b3b;
+    --expired: #6a20ff;
+    --fulfilled: #1aa94a;
+    --ring: #e5e7eb;
+    --muted: #6b7280;
+    --overdue: #ff8a00; /* amber/orange */
+    --closed: #64748b; /* slate */
+
+
+    --available: #22c55e;
+    --loaned: #0ea5e9;
+    --reserved: #f59e0b;
+    --damaged: #ef4444;
+    --lost: #64748b;
+}
+
+.filters {
+    display: flex;
+    gap: 18px;
+    align-items: center;
+    padding: 8px 4px 18px;
+    border-bottom: 1px solid var(--ring)
+}
+
+.dot-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    border: none;
+    cursor: pointer;
+    transition: transform .18s ease, box-shadow .18s ease
+}
+
+    .dot-btn:hover {
+        transform: scale(1.1)
+    }
+
+    .dot-btn[aria-pressed="true"] {
+        transform: scale(1.25)
+    }
+
+.dot-label {
+    font-size: .9rem;
+    color: var(--muted)
+}
+
+.pending {
+    background: var(--pending)
+}
+
+.active {
+    background: var(--active)
+}
+
+.cancelled {
+    background: var(--cancelled)
+}
+
+.expired {
+    background: var(--expired)
+}
+
+.fulfilled {
+    background: var(--fulfilled)
+}
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600
+}
+
+    .status .chip {
+        width: 14px;
+        height: 14px;
+        border-radius: 5px;
+        display: inline-block
+    }
+    /* dots  Reservation */
+    .status.pending .chip {
+        background: var(--pending)
+    }
+
+    .status.active .chip {
+        background: var(--active)
+    }
+
+    .status.cancelled .chip {
+        background: var(--cancelled)
+    }
+
+    .status.expired .chip {
+        background: var(--expired)
+    }
+
+    .status.fulfilled .chip {
+        background: var(--fulfilled)
+    }
+
+
+:root {
+}
+
+/* dots loan */
+.overdue {
+    background: var(--overdue);
+}
+
+.closed {
+    background: var(--closed);
+}
+
+/* status chips in table cells */
+.status.overdue .chip {
+    background: var(--overdue);
+}
+
+.status.closed .chip {
+    background: var(--closed);
+}
+
+
+/* dots  Reservations */
+.available {
+    background: var(--available)
+}
+
+.loaned {
+    background: var(--loaned)
+}
+
+.reserved {
+    background: var(--reserved)
+}
+
+.damaged {
+    background: var(--damaged)
+}
+
+.lost {
+    background: var(--lost)
+}
+
+.status.available .chip {
+    background: var(--available)
+}
+
+.status.loaned .chip {
+    background: var(--loaned)
+}
+
+.status.reserved .chip {
+    background: var(--reserved)
+}
+
+.status.damaged .chip {
+    background: var(--damaged)
+}
+
+.status.lost .chip {
+    background: var(--lost)
+}

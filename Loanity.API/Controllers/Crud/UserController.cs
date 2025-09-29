@@ -144,31 +144,5 @@ namespace Loanity.API.Controllers.Crud
 
             return Ok(dtos);
         }
-
-        [HttpGet("{username}")]
-        public async Task<IActionResult> GetByUsername(string username)
-        {
-            var user = await _db.Users
-                .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.UserName == username);
-
-            if (user == null) return NotFound();
-
-            var dto = new UserDto(
-                user.Id,
-                user.FirstName,
-                user.LastName,
-                user.UserName,
-                user.PassWord,
-                user.RfidChip,
-                user.Email,
-                user.Phone,
-                user.RoleId,
-                user.Role?.Name,
-                null // ConfirmAdminPassword is not returned
-            );
-
-            return Ok(dto);
-        }
     }
 }

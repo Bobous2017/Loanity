@@ -47,6 +47,11 @@
                 <li><a class="hover:text-indigo-600" asp-controller="Reservation" asp-action="Read">Reservation</a></li>
                 <li><a class="hover:text-indigo-600" asp-controller="Loan" asp-action="Read">Loan</a></li>
                 <li><a class="hover:text-indigo-600" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                <li class="relative flex items-center">
+                    @await Component.InvokeAsync("Notification")
+                </li>
+
+
             </ul>
             <!-- Hamburger button (mobile only) -->
             <button id="menuToggle" class="md:hidden text-gray-700">

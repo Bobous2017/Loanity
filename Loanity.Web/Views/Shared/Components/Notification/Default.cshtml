@@ -1,0 +1,14 @@
+﻿@model Loanity.Domain.Notification.NotificationReservation
+
+<a asp-controller="Reservation" asp-action="Read"
+   class="relative hover:text-indigo-600 flex items-center">
+    Notification
+    @if (Model.Pending > 0)
+    {
+        <span class="ml-2 inline-flex items-center justify-center
+                         bg-red-500 text-Red text-xs font-bold
+                         px-2 py-0.5 rounded-full shadow">
+            @Model.Pending
+        </span>
+    }
+</a>

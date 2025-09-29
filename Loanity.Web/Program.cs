@@ -1,5 +1,6 @@
 
 using Loanity.Web.Controllers.Auth;
+using Loanity.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Components.Web;
@@ -21,6 +22,8 @@ builder.Services.AddHttpClient("LoanityApi", client =>
     client.BaseAddress = new Uri("http://10.130.56.53:5253/"); // use your API’s actual port
 
 });
+
+builder.Services.AddScoped<NotificationService>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>

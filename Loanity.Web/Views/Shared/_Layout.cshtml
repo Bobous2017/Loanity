@@ -5,7 +5,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Loanity.Web</title>
-
+    <link rel="stylesheet" href="~/css/filterDot.css" asp-append-version="true" />
+   
     <!-- TailwindCSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -121,6 +122,29 @@
                 }, 3000);
             }
         });
+
+        //  Tilføj noget filter
+           document.addEventListener('DOMContentLoaded', function () {
+        // ------Filter Reservation--------
+        initColorFilter({
+            wrapper: '#reservationFilters',
+            table: '#reservationTable',
+            search: '#resvSearch'
+        });
+        // ------Filter Loan--------
+        initColorFilter({
+            wrapper: '#loanFilters',
+            table: '#loanTable',
+            search: '#loanSearch'
+        });
+        // ------Filter Equipment--------
+        initColorFilter({
+            wrapper: '#equipFilters',
+            table: '#equipmentTable',
+            search: '#equipSearch'
+        });
+    });
+
 
 
     </script>

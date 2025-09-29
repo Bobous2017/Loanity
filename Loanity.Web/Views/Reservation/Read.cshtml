@@ -65,10 +65,17 @@ style="display: flex;flex-direction: row-reverse;align-items: baseline;">
                         </span>
                     </td>
                     <td class="px-4 py-2 space-x-2">
-                        <a asp-action="Update" asp-route-id="@reservation.Id"
-                           class="text-indigo-600 hover:underline">Edit</a>
+                      
+                          
+                      <a asp-action="Update" asp-route-id="@reservation.Id"
+                           class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 text-sm font-medium">
+                            Edit
+                        </a>
                         <a asp-action="Delete" asp-route-id="@reservation.Id"
-                           class="text-red-600 hover:underline">Delete</a>
+                           class="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 text-sm font-medium"
+                           onclick="return confirm('Are you sure you want to delete this user?');">
+                            Delete
+                        </a>
                     </td>
                 </tr>
             }

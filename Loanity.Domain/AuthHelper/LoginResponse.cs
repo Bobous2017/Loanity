@@ -1,4 +1,4 @@
-﻿using Loanity.Domain.Dtos;
+﻿using Loanity.Domain.Dtos.UserHandlingDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;

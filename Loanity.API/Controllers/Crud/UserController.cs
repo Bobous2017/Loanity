@@ -1,6 +1,6 @@
 ﻿using Loanity.API.Controllers.Common;
 using Loanity.Domain.AuthHelper;
-using Loanity.Domain.Dtos;
+using Loanity.Domain.Dtos.UserHandlingDto;
 using Loanity.Domain.Entities;
 using Loanity.Infrastructure;
 using Microsoft.AspNetCore.Authorization;
@@ -107,5 +107,44 @@ namespace Loanity.API.Controllers.Crud
 
             return Ok(dtoList);
         }
+
+        [HttpGet("user-loans/{userId}")]
+        public async Task<IActionResult> GetUserLoans(int userId)
+        {
+            var user = await _db.Users.FindAsync(userId);
+            if (user == null) return NotFound();
+
+            var loans = await _db.Loans
+                .Where(l => l.UserId == userId)
+                .Include(l => l.Items)
+                    .ThenInclude(i => i.Equipment)
+                .ToListAsync();
+
+            var dtos = loans.SelectMany(l => l.Items.Select(i => new UserLoanDto
+            {
+                LoanId = l.Id,
+                UserFullName = $"{user.FirstName} {user.LastName}",
+                UserEmail = user.Email,
+                EquipmentName = i.Equipment.Name,
+                StartAt = l.StartAt,
+                DueAt = l.DueAt,
+                ReturnedAt = l.ReturnedAt,
+                Status = l.Status.ToString()
+            })).ToList();
+
+            // if user has NO loans, still return their name/email (empty loan list)
+            if (!dtos.Any())
+            {
+                dtos.Add(new UserLoanDto
+                {
+                    UserFullName = $"{user.FirstName} {user.LastName}",
+                    UserEmail = user.Email
+                });
+            }
+
+            return Ok(dtos);
+        }
+
+
     }
 }

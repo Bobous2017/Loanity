@@ -1,0 +1,66 @@
+﻿@model List<Loanity.Domain.Dtos.UserHandlingDto.UserLoanDto>
+@{
+    ViewData["Title"] = "Loan Details for User";
+    var first = Model.FirstOrDefault();
+}
+
+<h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">
+    Loan Details for @first?.UserFullName
+</h2>
+<p class="text-center text-gray-600 mb-6">
+    <strong class="font-semibold">Email:</strong> @first?.UserEmail
+</p>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="text-center text-gray-500 italic">
+        This user has no loans.
+    </div>
+}
+else
+{
+    <div class="overflow-x-auto bg-white shadow rounded-lg">
+        <table class="w-full border-collapse">
+            <thead class="bg-gray-100 text-gray-700">
+                <tr>
+                    <th class="px-4 py-2 text-left">Loan ID</th>
+                    <th class="px-4 py-2 text-left">Equipment</th>
+                    <th class="px-4 py-2 text-left">Start</th>
+                    <th class="px-4 py-2 text-left">Due</th>
+                    <th class="px-4 py-2 text-left">Returned</th>
+                    <th class="px-4 py-2 text-left">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var loan in Model)
+                {
+                    <tr class="border-t hover:bg-gray-50">
+                        <td class="px-4 py-2">@loan.LoanId</td>
+                        <td class="px-4 py-2">@loan.EquipmentName</td>
+                        <td class="px-4 py-2">@loan.StartAt.ToString("dd.MM.yyyy HH.mm.ss")</td>
+                        <td class="px-4 py-2">@loan.DueAt.ToString("dd.MM.yyyy HH.mm.ss")</td>
+                        <td class="px-4 py-2">
+                            @if (loan.ReturnedAt.HasValue)
+                            {
+                                @loan.ReturnedAt.Value.ToString("dd.MM.yyyy HH.mm.ss")
+                            }
+                            else
+                            {
+                                <span class="text-red-500 italic">Not Returned</span>
+                            }
+                    </td>
+                    <td class="px-4 py-2">
+                        <span class="px-2 py-1 rounded text-sm
+                                    @(loan.Status == "Active" ? "bg-green-100 text-green-700" :
+                                                                loan.Status == "Overdue" ? "bg-red-100 text-red-700" :
+                                                                loan.Status == "Closed" ? "bg-gray-200 text-gray-800" :
+                                                                "bg-gray-100 text-gray-600")">
+                        @loan.Status
+                    </span>
+                </td>
+            </tr>
+                        }
+            </tbody>
+        </table>
+    </div>
+}

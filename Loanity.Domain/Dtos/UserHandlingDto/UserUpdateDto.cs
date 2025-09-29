@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Loanity.Domain.Dtos
+namespace Loanity.Domain.Dtos.UserHandlingDto
 {
     public record UserUpdateDto(
      int Id,

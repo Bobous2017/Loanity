@@ -1,5 +1,4 @@
-﻿
-using Loanity.Domain.Dtos;
+﻿using Loanity.Domain.Dtos.UserHandlingDto;
 using Loanity.Domain.Entities;
 using Loanity.Web.Controllers.Common;
 using Microsoft.AspNetCore.Mvc;
@@ -77,5 +76,12 @@ public class UserController : CrudControllerWeb<UserDto>
         await LoadRolesAsync();
         return View(dto);
     }
+
+    public async Task<IActionResult> Details(int id)
+    {
+        var result = await _http.GetFromJsonAsync<List<UserLoanDto>>($"api/user/user-loans/{id}");
+        return View(result ?? new());
+    }
+
 
 }

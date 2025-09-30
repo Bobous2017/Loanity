@@ -30,7 +30,7 @@ namespace Loanity.API.Controllers.Crud
                 u.UserName,
                 u.PassWord,
                 u.RfidChip,
-                u.UserName,
+                u.Email,
                 u.Phone,
                 u.RoleId,
                 u.Role?.Name,

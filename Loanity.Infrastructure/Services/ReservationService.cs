@@ -8,7 +8,12 @@ namespace Loanity.Infrastructure.Services
     public class ReservationService : IReservationService
     {
         private readonly LoanityDbContext _db;
-        public ReservationService(LoanityDbContext db) => _db = db;
+        private readonly IEmailService _email;
+        public ReservationService(LoanityDbContext db, IEmailService email)
+        {
+            _db = db;
+            _email = email;
+        }
 
         public async Task<Reservation> CreateAsync(int userId, int equipmentId, DateTime startAt, DateTime endAt)
         {
@@ -41,39 +46,147 @@ namespace Loanity.Infrastructure.Services
         }
 
 
-        // Update a reservation (New or old Statut)
+        // Update a reservation ()
+        //public async Task<bool> UpdateAsync(Reservation updated)
+        //{
+        //    var reservation = await _db.Reservations
+        //        .Include(r => r.Equipment) // 👈 Important
+        //        .FirstOrDefaultAsync(r => r.Id == updated.Id);
+
+        //    if (reservation == null)
+        //        return false;
+
+        //    reservation.StartAt = updated.StartAt;
+        //    reservation.EndAt = updated.EndAt;
+        //    reservation.UserId = updated.UserId;
+        //    reservation.EquipmentId = updated.EquipmentId;
+        //    reservation.Status = updated.Status;
+
+
+
+        //    //  Business rule: Update Equipment status based on Reservation status
+        //    var equipment = await _db.Equipment.FindAsync(updated.EquipmentId);
+        //    if (equipment != null)
+        //    {
+        //        equipment.Status = updated.Status switch
+        //        {
+        //            ReservationStatus.Active => EquipmentStatus.Reserved,
+        //            ReservationStatus.Fulfilled => EquipmentStatus.Loaned,
+        //            ReservationStatus.Cancelled => EquipmentStatus.Available,
+        //            ReservationStatus.Expired => EquipmentStatus.Available,
+        //            _ => equipment.Status
+        //        };
+        //    }
+
+        //    await _db.SaveChangesAsync();
+        //    return true;
+        //}
         public async Task<bool> UpdateAsync(Reservation updated)
         {
             var reservation = await _db.Reservations
-                .Include(r => r.Equipment) // 👈 Important
+                .Include(r => r.Equipment)
+                .Include(r => r.User) // 👈 Make sure we have access to the user's email
                 .FirstOrDefaultAsync(r => r.Id == updated.Id);
 
             if (reservation == null)
                 return false;
 
+            // Update fields
             reservation.StartAt = updated.StartAt;
             reservation.EndAt = updated.EndAt;
             reservation.UserId = updated.UserId;
             reservation.EquipmentId = updated.EquipmentId;
             reservation.Status = updated.Status;
 
-            // 🚨 Business rule: Update Equipment status based on Reservation status
+            // Prepare dynamic values for email
+            var toEmail = reservation.User.Email; // 👈 REAL user email
+            var equipmentName = reservation.Equipment?.Name ?? "Unknown Equipment";
+            var qrCodeText = reservation.Equipment?.QrCode ?? "UNKNOWN_QR";
+
+            var startAt = reservation.StartAt;
+            var endAt = reservation.EndAt;
+
+            // Update Equipment status
             var equipment = await _db.Equipment.FindAsync(updated.EquipmentId);
             if (equipment != null)
             {
-                equipment.Status = updated.Status switch
+                switch (updated.Status)
                 {
-                    ReservationStatus.Active => EquipmentStatus.Reserved,
-                    ReservationStatus.Fulfilled => EquipmentStatus.Loaned,
-                    ReservationStatus.Cancelled => EquipmentStatus.Available,
-                    ReservationStatus.Expired => EquipmentStatus.Available,
-                    _ => equipment.Status
-                };
+                    case ReservationStatus.Active:
+                        equipment.Status = EquipmentStatus.Reserved;
+
+                        var qrActive = new GenerateQRCode();
+                        using (var stream = qrActive.GenerateQRCodeGen(qrCodeText, null))
+                        {
+                            var activeBody = $@"
+                        <h3>Your Reservation is Active</h3>
+                        <p>Equipment: <b>{equipmentName}</b></p>
+                        <p>Pickup Location: Loanity Equipment Building 8</p>
+                        <p>From: {startAt}</p>
+                        <p>To: {endAt}</p>
+                        <p>Show the attached QR code when picking up your equipment.</p>";
+
+                            await _email.SendAsync(
+                                toEmail,
+                                $"Reservation Confirmed: {equipmentName}",
+                                activeBody,
+                                stream,
+                                "reservation_qr.png"
+                            );
+                        }
+                        break;
+
+                    case ReservationStatus.Fulfilled:
+                        equipment.Status = EquipmentStatus.Loaned;
+
+                        var qrFulfilled = new GenerateQRCode();
+                        using (var stream = qrFulfilled.GenerateQRCodeGen(qrCodeText, null))
+                        {
+                            var fulfilledBody = $@"
+                        <h3>Loan Confirmed</h3>
+                        <p>Your reservation has been fulfilled and is now a loan.</p>
+                        <p><b>Equipment:</b> {equipmentName}</p>
+                        <p><b>From:</b> {startAt}</p>
+                        <p><b>To:</b> {endAt}</p>
+                        <p>Reference: LOAN-{reservation.Id}</p>";
+
+                            await _email.SendAsync(
+                                toEmail,
+                                $"Loan Confirmed: {equipmentName}",
+                                fulfilledBody,
+                                stream,
+                                "reservation_qr.png"
+                            );
+                        }
+                        break;
+
+                    case ReservationStatus.Cancelled:
+                        equipment.Status = EquipmentStatus.Available;
+
+                        var cancelBody = $@"
+                    <h3>Reservation Cancelled</h3>
+                    <p>Your reservation was cancelled or rejected.</p>
+                    <p><b>Equipment:</b> {equipmentName}</p>
+                    <p><b>Reservation ID:</b> {reservation.Id}</p>";
+
+                        await _email.SendAsync(
+                            toEmail,
+                            "Reservation Cancelled",
+                            cancelBody
+                        );
+                        break;
+
+                    case ReservationStatus.Expired:
+                        equipment.Status = EquipmentStatus.Available;
+                        break;
+                }
             }
 
             await _db.SaveChangesAsync();
             return true;
         }
+
+
 
         // Activate a reservation (make it valid now)
         public async Task<bool> ActivateReservationAsync(int reservationId)

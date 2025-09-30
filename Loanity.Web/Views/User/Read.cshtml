@@ -95,7 +95,7 @@
                         }
                     </td>
 
-
+@* 
                     <td class="px-4 py-2 space-x-2">
                         <a asp-controller="User" asp-action="Details" asp-route-id="@user.Id"
                            class="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 text-sm font-medium">
@@ -120,6 +120,18 @@
 
 
 
+                    </td> *@
+                    <td class="px-4 py-2">
+                    <a asp-controller="User" asp-action="Details" asp-route-id="@user.Id" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="Update" asp-route-id="@user.Id"
+                           class="px-3 py-1 bg-indigo-100 text-indigo-700 rounded hover:bg-indigo-200 text-sm font-medium">
+                            Edit
+                        </a>
+                    <a asp-action="Delete" asp-route-id="@user.Id"
+                               class="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 text-sm font-medium"
+                               onclick="return confirm('Are you sure you want to delete this user?');">
+                                Delete
+                            </a>
                     </td>
 
                 </tr>

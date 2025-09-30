@@ -39,7 +39,7 @@
         }
 
 
-        // Login by writting inputs RFID number, Brugername  and Password 
+        // Login  writting inputs Brugername  and Password
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDto dto)
         {
@@ -124,32 +124,25 @@
         public IActionResult LoginWithRfid([FromBody] LoginDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto.RfidChip))
-                return BadRequest("RFID chip is required.");
-
-            var user = _db.Users.FirstOrDefault(u => u.RfidChip == dto.RfidChip);
-            if (user == null)
-                return Unauthorized("Invalid RFID chip.");
-
-            if (user.RoleId == 1) // Admin
             {
-                if (!dto.IsScanned)
-                {
-                    // RFID was typed manually → enforce full login
-                    if (string.IsNullOrWhiteSpace(dto.UserName) || string.IsNullOrWhiteSpace(dto.PassWord))
-                        return Unauthorized("🔒 Admins must also enter Username + Password if RFID was typed.");
-
-                    if (user.UserName != dto.UserName || user.PassWord != dto.PassWord)
-                        return Unauthorized("Invalid admin credentials with RFID.");
-                }
+                return BadRequest("RFID chip is required.");
             }
 
-            // ✅ create token as usual
-            var claims = new List<Claim>
-    {
-        new Claim(ClaimTypes.Name, user.UserName),
-        new Claim(ClaimTypes.Role, user.RoleId == 1 ? "Admin" : "User")
-    };
+            var user = _db.Users.FirstOrDefault(u => u.RfidChip == dto.RfidChip);
 
+            if (user == null)
+            {
+                return Unauthorized("Invalid RFID chip.");
+            }
+
+            // Create Claims
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, user.RoleId == 1 ? "Admin" : "User")
+            };
+
+            // Create Token
             var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -178,8 +171,6 @@
                 }
             });
         }
-
-
     }
 }
 

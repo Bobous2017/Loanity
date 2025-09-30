@@ -51,7 +51,7 @@ builder.Services.AddHttpClient("LoanityApi", client =>
 builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<IReservationService, ReservationService>(); // Step 4
 builder.Services.AddScoped<INotificationService, NotificationService>();
-
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
 
 
 // Add controllers + Swagger

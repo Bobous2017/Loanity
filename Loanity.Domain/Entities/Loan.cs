@@ -17,6 +17,6 @@ namespace Loanity.Domain.Entities
         public LoanStatus Status { get; set; } = LoanStatus.Active;
         public int? ReservationId { get; set; }    // optional link
         public ICollection<LoanItem> Items { get; set; } = new List<LoanItem>();
-
+        public User User { get; set; } = null!;
     }
 }

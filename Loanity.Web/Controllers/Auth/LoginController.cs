@@ -38,15 +38,30 @@ namespace Loanity.Web.Controllers.Auth
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto model)
         {
-            if (!ModelState.IsValid)
+            // Manual validation
+            if (string.IsNullOrWhiteSpace(model.RfidChip) &&
+                (string.IsNullOrWhiteSpace(model.UserName) || string.IsNullOrWhiteSpace(model.PassWord)))
+            {
+                ModelState.AddModelError("", "Udfyld enten RFID eller brugernavn og adgangskode.");
                 return View("Index", model);
-
-            //  Hash password before sending to API
-            
-            model.PassWord = PasswordHelper.Hash(model.PassWord);
+            }
 
             var client = _http.CreateClient("LoanityApi");
-            var response = await client.PostAsJsonAsync("api/auth/login", model);
+            HttpResponseMessage response;
+
+            // RFID-only login: if username and password are empty, but RFID is present
+            if (string.IsNullOrWhiteSpace(model.UserName) && string.IsNullOrWhiteSpace(model.PassWord) && !string.IsNullOrWhiteSpace(model.RfidChip))
+            {
+                // Call RFID login endpoint
+                var rfidDto = new { RfidChip = model.RfidChip };
+                response = await client.PostAsJsonAsync("api/auth/login-rfid", rfidDto);
+            }
+            else
+            {
+                // Hash password before sending to API
+                model.PassWord = PasswordHelper.Hash(model.PassWord);
+                response = await client.PostAsJsonAsync("api/auth/login", model);
+            }
 
             if (response.IsSuccessStatusCode)
             {
@@ -71,9 +86,8 @@ namespace Loanity.Web.Controllers.Auth
 
                 return RedirectToAction("Index", "Home");
             }
-            //ModelState.AddModelError("", "Invalid login attempt"); // Feeedback to user
 
-            //  Read error message from API
+            // Read error message from API
             var errorMessage = await response.Content.ReadAsStringAsync();
             ModelState.AddModelError("", errorMessage); // Show exact reason
             return View("Index", model);

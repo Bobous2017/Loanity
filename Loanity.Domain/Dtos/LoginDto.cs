@@ -8,9 +8,9 @@ namespace Loanity.Domain.Dtos
 {
     public class LoginDto
     {
-        public string UserName { get; set; } = null;
-        public string PassWord { get; set; } = null!;
-        public string? RfidChip { get; set; } // Only needed for Admin
+        public string? UserName { get; set; }
+        public string? PassWord { get; set; }
+        public string? RfidChip { get; set; }
     }
 
 }

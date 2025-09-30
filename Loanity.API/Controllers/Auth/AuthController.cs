@@ -119,10 +119,58 @@
             });
         }
 
+        [HttpPost("login-rfid")]
+        public IActionResult LoginWithRfid([FromBody] LoginDto dto)
+        {
+            if (string.IsNullOrWhiteSpace(dto.RfidChip))
+            {
+                return BadRequest("RFID chip is required.");
+            }
 
+            var user = _db.Users.FirstOrDefault(u => u.RfidChip == dto.RfidChip);
+
+            if (user == null)
+            {
+                return Unauthorized("Invalid RFID chip.");
+            }
+
+            // Create Claims
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Role, user.RoleId == 1 ? "Admin" : "User")
+            };
+
+            // Create Token
+            var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"]);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(claims),
+                Expires = DateTime.UtcNow.AddMinutes(int.Parse(_config["Jwt:ExpireMinutes"])),
+                Issuer = _config["Jwt:Issuer"],
+                Audience = _config["Jwt:Audience"],
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var jwt = tokenHandler.WriteToken(token);
+
+            return Ok(new
+            {
+                token = jwt,
+                user = new
+                {
+                    user.Id,
+                    user.UserName,
+                    user.Email,
+                    user.RoleId,
+                    user.FirstName,
+                    user.LastName
+                }
+            });
+        }
     }
-
-
 }
 
 

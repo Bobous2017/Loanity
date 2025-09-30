@@ -39,7 +39,7 @@
         }
 
 
-        // Login by writting inputs RFID number, Brugername  and Password 
+        // Login  writting inputs Brugername  and Password
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDto dto)
         {
@@ -118,6 +118,7 @@
                 }
             });
         }
+
     }
 }
 

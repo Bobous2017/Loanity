@@ -22,5 +22,6 @@ namespace Loanity.Infrastructure
         public DbSet<Loan> Loans => Set<Loan>();
         public DbSet<LoanItem> LoanItems => Set<LoanItem>();
 
+
     }
 }

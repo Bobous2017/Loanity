@@ -77,9 +77,16 @@ public class UserController : CrudControllerWeb<UserDto>
         return View(dto);
     }
 
+    //public async Task<IActionResult> Details(int id)
+    //{
+    //    var result = await _http.GetFromJsonAsync<List<UserLoanDto>>($"api/user/user-loans/{id}");
+    //    return View(result ?? new());
+    //}
     public async Task<IActionResult> Details(int id)
     {
+        
         var result = await _http.GetFromJsonAsync<List<UserLoanDto>>($"api/user/user-loans/{id}");
+
         return View(result ?? new());
     }
 

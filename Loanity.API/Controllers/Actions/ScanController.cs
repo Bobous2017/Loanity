@@ -18,7 +18,8 @@ namespace Loanity.API.Controllers.Actions
         {
             if (req is null)
                 return BadRequest(new { Message = "Request body is required." });
-
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
             var action = req.Action?.Trim().ToLowerInvariant();
             if (string.IsNullOrEmpty(action))
                 return BadRequest(new { Message = "Action is required. Use 'loan' or 'return'." });
@@ -28,7 +29,13 @@ namespace Loanity.API.Controllers.Actions
                 case "loan":
                     try
                     {
+                        if (req.DueAt is not null && req.DueAt.Value.Year > 2100)
+                        {
+                            return BadRequest(new { Message = "Due date is not realistic." });
+                        }
+
                         var dueAt = req.DueAt ?? DateTime.UtcNow.AddDays(7);
+
                         var loan = await _loanService.CreateLoanFromScanAsync(req.UserId, req.QrCode, dueAt);
 
                         // Handle the case where the service signals failure by returning null

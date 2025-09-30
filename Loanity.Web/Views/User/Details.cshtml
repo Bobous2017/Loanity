@@ -1,5 +1,5 @@
 ﻿@model List<Loanity.Domain.Dtos.UserHandlingDto.UserLoanDto>
-@{
+@* @{
     ViewData["Title"] = "Loan Details for User";
     var first = Model.FirstOrDefault();
 }
@@ -64,3 +64,48 @@ else
         </table>
     </div>
 }
+ *@
+
+@{
+    ViewData["Title"] = "Loan Details for User";
+    var first = Model.FirstOrDefault();
+}
+
+<h2>Loan Details for @first?.UserFullName</h2>
+<p><strong>Email:</strong> @first?.UserEmail</p>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Loan ID</th>
+            <th>Equipment</th>
+            <th>Start</th>
+            <th>Due</th>
+            <th>Returned</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var loan in Model)
+        {
+            <tr>
+                <td>@loan.LoanId</td>
+                <td>@loan.EquipmentName</td>
+                <td>@loan.StartAt.ToString("dd.MM.yyyy HH.mm.ss")</td>
+                <td>@loan.DueAt.ToString("dd.MM.yyyy HH.mm.ss")</td>
+                <td>
+                    @if (loan.ReturnedAt.HasValue)
+                    {
+                        @loan.ReturnedAt.Value.ToString("dd.MM.yyyy HH.mm.ss")
+                    }
+                    else
+                    {
+                        <span class="text-danger">Not Returned</span>
+                    }
+                </td>
+                <td>@loan.Status</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

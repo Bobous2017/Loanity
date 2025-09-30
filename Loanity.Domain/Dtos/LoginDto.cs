@@ -11,7 +11,5 @@ namespace Loanity.Domain.Dtos
         public string? UserName { get; set; }
         public string? PassWord { get; set; }
         public string? RfidChip { get; set; }
-        public bool IsScanned { get; set; }   
     }
-
 }

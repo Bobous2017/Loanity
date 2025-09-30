@@ -31,6 +31,12 @@
 
             <div class="form-grid">
                 <div>
+                    <label asp-for="RfidChip">RFID</label>
+                    <input asp-for="RfidChip" class="input" type="password" placeholder="Scan dit RFID kort" autocomplete="off" aria-describedby="rfid-help"
+                           oninput="this.value = this.value.toUpperCase();" />
+                    <div id="rfid-help" class="help">dette udfyldes automatisk ved scanning af kort.</div>
+                </div>
+                <div>
                     <label asp-for="UserName">Brugernavn</label>
                     <input asp-for="UserName" class="input" placeholder="Indtast dit brugernavn" autocomplete="username" />
                 </div>
@@ -39,13 +45,6 @@
                     <label asp-for="PassWord">Adgangskode</label>
                     <input asp-for="PassWord" class="input" type="password" placeholder="Indtast din adgangskode" autocomplete="current-password" />
                 </div>
-
-                <div>
-                    <label asp-for="RfidChip">RFID</label>
-                    <input asp-for="RfidChip" class="input" inputmode="numeric" placeholder="Scan eller indtast dit RFID" autocomplete="off" aria-describedby="rfid-help" />
-                    <div id="rfid-help" class="help">Hvis dit kort er numerisk, udfyldes dette automatisk ved scanning.</div>
-                </div>
-
                 <div class="actions">
                     <span class="subtle">Brug for hjælp? Kontakt IT.</span>
                     <button class="btn" type="submit" id="loginBtn">Bekræft</button>
@@ -111,5 +110,14 @@
     </main>
 </body>
 </html>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const rfidInput = document.getElementById("RfidChip");
+        if (rfidInput) {
+            rfidInput.focus();
+        }
+    });
+</script>
 
 

@@ -39,7 +39,7 @@
         }
 
 
-       
+        // Login by writting inputs RFID number, Brugername  and Password 
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginDto dto)
         {
@@ -119,6 +119,7 @@
             });
         }
 
+        // Login by Swapping RFID Chip,  directly to Webpanel,  withoud writting inputs Brugername  and Password
         [HttpPost("login-rfid")]
         public IActionResult LoginWithRfid([FromBody] LoginDto dto)
         {
@@ -134,12 +135,31 @@
                 return Unauthorized("Invalid RFID chip.");
             }
 
-            // Create Claims
-            var claims = new List<Claim>
+            // 🚨 Extra check: if Admin AND username/password are empty → block manual typed attempts
+            if (user.RoleId == 1)
             {
-                new Claim(ClaimTypes.Name, user.UserName),
-                new Claim(ClaimTypes.Role, user.RoleId == 1 ? "Admin" : "User")
-            };
+                bool usernameProvided = !string.IsNullOrWhiteSpace(dto.UserName);
+                bool passwordProvided = !string.IsNullOrWhiteSpace(dto.PassWord);
+
+                // If RFID was typed (username/password missing), enforce full login
+                if (!usernameProvided || !passwordProvided)
+                {
+                    return Unauthorized("🔒 Admins must also enter Username + Password if RFID was typed.");
+                }
+
+                // ✅ Validate username/password for admins
+                if (user.UserName != dto.UserName || user.PassWord != dto.PassWord)
+                {
+                    return Unauthorized("Invalid admin credentials with RFID.");
+                }
+            }
+
+            // ✅ Create Claims
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, user.UserName),
+        new Claim(ClaimTypes.Role, user.RoleId == 1 ? "Admin" : "User")
+    };
 
             // Create Token
             var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"]);
@@ -170,6 +190,7 @@
                 }
             });
         }
+
     }
 }
 

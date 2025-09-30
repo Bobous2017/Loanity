@@ -11,18 +11,20 @@ namespace Loanity.Domain.Entities
         public int Id { get; set; }
         public int RoleId { get; set; }
 
-       // [ValidateNever]
         [System.Text.Json.Serialization.JsonIgnore]
         public Role? Role { get; set; }
+
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string UserName { get; set; } = null!;
         public string? PassWord { get; set; }
-        public string? RfidChip { get; set; } // Only needed for Admin
+        public string? RfidChip { get; set; }
         public string Email { get; set; } = null!;
         public string? Phone { get; set; }
-        // address fields omitted for brevity
-        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>(); // ← ADD THIS
 
+        public ICollection<Reservation> Reservations { get; set; } = new List<Reservation>();
+
+        // NEW: explicit inverse navigation for Loan -> User
+        public ICollection<Loan> Loans { get; set; } = new List<Loan>();
     }
 }

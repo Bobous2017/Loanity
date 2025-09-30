@@ -25,8 +25,6 @@
 
         <h1 id="title">Log ind</h1>
         <p class="lead">Brug dine skoleoplysninger.</p>
-        <input type="hidden" id="IsScanned" name="IsScanned" value="false" />
-
         <form asp-controller="Login" asp-action="Login" method="post" autocomplete="off" novalidate>
             @Html.AntiForgeryToken()
 
@@ -120,31 +118,6 @@
         }
     });
 
-    document.addEventListener("DOMContentLoaded", function () {
-        const rfidInput = document.getElementById("RfidChip");
-        const isScannedInput = document.getElementById("IsScanned");
-
-        let lastTime = 0;
-        let typedChars = 0;
-
-        rfidInput.addEventListener("input", function (e) {
-            const now = Date.now();
-            typedChars++;
-
-            if (lastTime) {
-                const diff = now - lastTime;
-
-                if (diff < 30 && typedChars > 5) {
-                    // Looks like a fast RFID scan
-                    isScannedInput.value = "true";
-                } else {
-                    // Looks like manual typing
-                    isScannedInput.value = "false";
-                }
-            }
-            lastTime = now;
-        });
-    });
 </script>
 
 

@@ -94,6 +94,7 @@ namespace Loanity.Infrastructure
             b.Entity<Loan>().HasKey(x => x.Id);
             b.Entity<Loan>()
               .Property(x => x.Status).HasConversion<string>();
+            // Use navigation lambdas so EF maps a single FK (no shadow UserId1)
             b.Entity<Loan>()
               .HasOne<User>().WithMany().HasForeignKey(x => x.UserId);
             b.Entity<Loan>()

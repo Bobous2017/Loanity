@@ -124,44 +124,32 @@
         public IActionResult LoginWithRfid([FromBody] LoginDto dto)
         {
             if (string.IsNullOrWhiteSpace(dto.RfidChip))
-            {
                 return BadRequest("RFID chip is required.");
-            }
 
             var user = _db.Users.FirstOrDefault(u => u.RfidChip == dto.RfidChip);
-
             if (user == null)
-            {
                 return Unauthorized("Invalid RFID chip.");
-            }
 
-            // 🚨 Extra check: if Admin AND username/password are empty → block manual typed attempts
-            if (user.RoleId == 1)
+            if (user.RoleId == 1) // Admin
             {
-                bool usernameProvided = !string.IsNullOrWhiteSpace(dto.UserName);
-                bool passwordProvided = !string.IsNullOrWhiteSpace(dto.PassWord);
-
-                // If RFID was typed (username/password missing), enforce full login
-                if (!usernameProvided || !passwordProvided)
+                if (!dto.IsScanned)
                 {
-                    return Unauthorized("🔒 Admins must also enter Username + Password if RFID was typed.");
-                }
+                    // RFID was typed manually → enforce full login
+                    if (string.IsNullOrWhiteSpace(dto.UserName) || string.IsNullOrWhiteSpace(dto.PassWord))
+                        return Unauthorized("🔒 Admins must also enter Username + Password if RFID was typed.");
 
-                // ✅ Validate username/password for admins
-                if (user.UserName != dto.UserName || user.PassWord != dto.PassWord)
-                {
-                    return Unauthorized("Invalid admin credentials with RFID.");
+                    if (user.UserName != dto.UserName || user.PassWord != dto.PassWord)
+                        return Unauthorized("Invalid admin credentials with RFID.");
                 }
             }
 
-            // ✅ Create Claims
+            // ✅ create token as usual
             var claims = new List<Claim>
     {
         new Claim(ClaimTypes.Name, user.UserName),
         new Claim(ClaimTypes.Role, user.RoleId == 1 ? "Admin" : "User")
     };
 
-            // Create Token
             var key = Encoding.ASCII.GetBytes(_config["Jwt:Key"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -190,6 +178,7 @@
                 }
             });
         }
+
 
     }
 }

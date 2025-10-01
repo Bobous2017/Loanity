@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Statistics";
+}
+
+<h2>📊 Statistik</h2>
+
+
+
+<div style="display: flex; justify-content: center; align-items: flex-start; gap: 40px; flex-wrap: wrap; width: 100%; padding: 40px 0;">
+    <div>
+        <canvas id="mostLoanedChart" width="500" height="400"></canvas>
+    </div>
+
+    <div>
+        <canvas id="averageLoanChart" width="400" height="400"></canvas>
+    </div>
+
+    <div>
+        <canvas id="delayChart" width="500" height="400"></canvas>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        async function fetchAndRender() {
+            const res1 = await fetch('http://10.130.56.53:5253/api/statistics/most-loaned');
+            const mostLoaned = await res1.json();
+
+            const res2 = await fetch('http://10.130.56.53:5253/api/statistics/average-loan-duration');
+            const average = await res2.json();
+
+            const res3 = await fetch('http://10.130.56.53:5253/api/statistics/most-delays');
+            const delays = await res3.json();
+
+            // Chart 1: Most Loaned Equipment
+            new Chart(document.getElementById('mostLoanedChart'), {
+                type: 'bar',
+                data: {
+                    labels: mostLoaned.map(x => x.equipment),
+                    datasets: [{
+                        label: 'Loan Count',
+                        data: mostLoaned.map(x => x.timesLoaned),
+                        borderWidth: 1,
+                        backgroundColor: '#36A2EB'
+                    }]
+                }
+            });
+
+            // Chart 2: Average Loan Duration
+            new Chart(document.getElementById('averageLoanChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Average Loan Duration (hours)'],
+                    datasets: [{
+                        label: 'Loan Duration',
+                        data: [average.averageLoanDurationHours],
+                        backgroundColor: ['#FFCE56']
+                    }]
+                }
+            });
+
+            // Chart 3: Most Delays
+            new Chart(document.getElementById('delayChart'), {
+                type: 'bar',
+                data: {
+                    labels: delays.map(x => x.user),
+                    datasets: [{
+                        label: 'Delays',
+                        data: delays.map(x => x.delayCount),
+                        borderWidth: 1,
+                        backgroundColor: '#FF6384'
+                    }]
+                }
+            });
+        }
+
+        fetchAndRender();
+    </script>
+}

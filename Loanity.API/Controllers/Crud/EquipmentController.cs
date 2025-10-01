@@ -49,5 +49,14 @@ namespace Loanity.API.Controllers.Crud
             var item = await _db.Equipment.SingleOrDefaultAsync(e => e.QrCode == qr);
             return item == null ? NotFound() : Ok(item);
         }
+
+        [HttpGet]
+        public override async Task<IActionResult> GetAll()
+        {
+            var equipmentList = await _db.Equipment
+                                         .Include(e => e.Category)
+                                         .ToListAsync();
+            return Ok(equipmentList);
+        }
     }
 }

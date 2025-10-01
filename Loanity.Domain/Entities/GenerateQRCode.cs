@@ -24,7 +24,7 @@ namespace Loanity.Domain.Entities
             if (!string.IsNullOrWhiteSpace(qrText))
             {
                 var random = new Random();
-                var randomData = $"{qrText}-{random.Next(1000, 9999)}";
+                var randomData = $"{qrText}";
 
                 var qrCodeWriter = new ZXing.BarcodeWriterPixelData
                 {

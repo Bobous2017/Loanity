@@ -27,13 +27,7 @@ namespace Loanity.Web.Controllers.Auth
             return View(new LoginDto());
         }
 
-        //[HttpGet("timer")]
-        //public IActionResult GetTimer()
-        //{
-        //    var sessionTimer = SessionTimer.SessionTimeoutSeconds;
-        //    var timer = new { num = sessionTimer };
-        //    return Ok(timer);
-        //}
+        
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginDto model)
@@ -84,6 +78,7 @@ namespace Loanity.Web.Controllers.Auth
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
+                TempData["ShowWelcome"] = true;  // Set TempData  for Hello message
                 return RedirectToAction("Index", "Home");
             }
 

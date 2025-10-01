@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Loanity.Web</title>
     <link rel="stylesheet" href="~/css/filterDot.css" asp-append-version="true" />
-   
+
     <!-- TailwindCSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -20,60 +20,90 @@
             transition: transform .2s ease, box-shadow .2s ease;
         }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 24px rgba(0,0,0,.12);
-        }
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 12px 24px rgba(0,0,0,.12);
+            }
     </style>
 </head>
 <body class="bg-gray-50 flex flex-col min-h-screen">
 
     <!-- Navbar -->
     <header>
-        <nav class="bg-white shadow-md px-6 py-4 flex justify-between items-center">
-            <!-- Logo + Title -->
-            <div class="flex items-center gap-3">
-                <img src="/img/loanityIcon.png" alt="Loanity Logo"
-                     class="w-10 h-10 rounded-full object-cover shadow-sm" />
-                <a class="text-xl text-indigo-600" asp-area="" asp-controller="Home" asp-action="Index">
-                    Loanity
-                </a>
+        <nav class="bg-white shadow-md px-6 py-4">
+            <div class="max-w-7xl mx-auto flex justify-between items-center">
+                <!-- Left: Logo & Title -->
+                <div class="flex items-center space-x-3">
+                    <img src="/img/loanityIcon.png" alt="Loanity Logo" class="w-10 h-10 rounded-full object-cover shadow-sm">
+                    <a class="text-2xl font-bold text-indigo-600 hover:text-indigo-700 transition duration-300" asp-area="" asp-controller="Home" asp-action="Index">
+                        Loanity
+                    </a>
+                </div>
+
+                <!-- Middle: Navigation Links -->
+                <ul id="navMenu" class="hidden md:flex items-center space-x-6 text-gray-700 font-medium">
+                    <li><a class="hover:text-indigo-600 transition" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                    <li><a class="hover:text-indigo-600 transition" asp-controller="Home" asp-action="Statistics">Charts</a></li>
+                    <li><a class="hover:text-indigo-600 transition" asp-controller="User" asp-action="Read">User</a></li>
+                    <li><a class="hover:text-indigo-600 transition" asp-controller="Equipment" asp-action="Read">Equipment</a></li>
+                    <li><a class="hover:text-indigo-600 transition" asp-controller="Reservation" asp-action="Read">Reservation</a></li>
+                    <li><a class="hover:text-indigo-600 transition" asp-controller="Loan" asp-action="Read">Loan</a></li>
+                    <li><a class="hover:text-indigo-600 transition" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                    <li class="relative flex items-center">@await Component.InvokeAsync("Notification")</li>
+                </ul>
+
+                <!-- Right: User actions -->
+                <div class="hidden md:flex items-center space-x-4">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form asp-controller="Login" asp-action="Logout" method="post">
+                            <button type="submit" class="text-red-500 hover:underline">Logout</button>
+                        </form>
+                        @if (TempData["ShowWelcome"] != null)
+                        {
+                            <span id="welcomeMessage" class="text-gray-600">👋 Hello</span>
+                        }
+                        <span class="text-sm font-semibold text-gray-700">@User.Identity.Name!</span>
+                    }
+                    else
+                    {
+                        <a class="text-indigo-600 font-semibold hover:underline" asp-controller="Login" asp-action="Index">Login</a>
+                    }
+                </div>
+
+                <!-- Hamburger (Mobile only) -->
+                <div class="md:hidden flex items-center">
+                    <button id="menuToggle" class="text-gray-600 focus:outline-none">
+                        <i class="fa fa-bars fa-lg"></i>
+                    </button>
+                </div>
             </div>
 
-            <!-- Navigation Links -->
-            <ul id="navMenu" class="hidden md:flex gap-6 text-gray-700 font-medium">
-                <li><a class="text-xl text-indigo-600 hover:text-indigo-600" asp-controller="Home" asp-action="Index">Dashboard Admin</a></li>
-                <li><a class="hover:text-indigo-600" asp-controller="User" asp-action="Read">User</a></li>
-                <li><a class="hover:text-indigo-600" asp-controller="Equipment" asp-action="Read">Equipment</a></li>
-                <li><a class="hover:text-indigo-600" asp-controller="Reservation" asp-action="Read">Reservation</a></li>
-                <li><a class="hover:text-indigo-600" asp-controller="Loan" asp-action="Read">Loan</a></li>
-                <li><a class="hover:text-indigo-600" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
-                <li class="relative flex items-center">
-                    @await Component.InvokeAsync("Notification")
-                </li>
+            <!-- Mobile menu -->
+            <div id="navMenuMobile" class="hidden md:hidden flex-col space-y-3 px-4 pt-4 pb-6 text-gray-700 font-medium">
+                <a asp-controller="Home" asp-action="Index" class="hover:text-indigo-600">Dashboard</a>
+                <a asp-controller="Home" asp-action="Statistics" class="hover:text-indigo-600">Charts</a>
+                <a asp-controller="User" asp-action="Read" class="hover:text-indigo-600">User</a>
+                <a asp-controller="Equipment" asp-action="Read" class="hover:text-indigo-600">Equipment</a>
+                <a asp-controller="Reservation" asp-action="Read" class="hover:text-indigo-600">Reservation</a>
+                <a asp-controller="Loan" asp-action="Read" class="hover:text-indigo-600">Loan</a>
+                <a asp-controller="Home" asp-action="Privacy" class="hover:text-indigo-600">Privacy</a>
 
 
-            </ul>
-            <!-- Hamburger button (mobile only) -->
-            <button id="menuToggle" class="md:hidden text-gray-700">
-                <i class="fa fa-bars fa-lg"></i>
-            </button>
-            <!-- Right Section -->
-            <div class="flex items-center gap-4">
                 @if (User.Identity.IsAuthenticated)
                 {
                     <form asp-controller="Login" asp-action="Logout" method="post">
                         <button type="submit" class="text-red-500 hover:underline">Logout</button>
                     </form>
-                    <span id="welcomeMessage" class="text-gray-600">👋 Hello</span>
-                    <span class="text-gray-600 font-medium">@User.Identity.Name!</span>
+                    <span class="text-sm font-semibold text-gray-700">@User.Identity.Name!</span>
                 }
                 else
                 {
-                    <a class="text-indigo-600 font-semibold hover:underline" asp-controller="Login" asp-action="Index">Login</a>
+                    <a asp-controller="Login" asp-action="Index" class="text-indigo-600 font-semibold hover:underline">Login</a>
                 }
             </div>
         </nav>
+
     </header>
 
     <!-- Main Content -->
@@ -92,58 +122,58 @@
     @await RenderSectionAsync("Scripts", required: false)
 
     <script>
-        // Redirect user to Login after session timeout
-        const timer = @SessionTimer.SessionTimeoutSeconds;
-        setTimeout(() => window.location.href = '/Login', timer * 1000);
+            // Redirect user to Login after session timeout
+            const timer = @SessionTimer.SessionTimeoutSeconds;
+            setTimeout(() => window.location.href = '/Login', timer * 1000);
 
-         // Load  menu  for mobile
-        document.getElementById("menuToggle").addEventListener("click", () => {
-            const menu = document.getElementById("navMenu");
-            menu.classList.toggle("hidden");
-            menu.classList.toggle("flex");
-            menu.classList.toggle("flex-col");
-            menu.classList.toggle("absolute");
-            menu.classList.toggle("top-16");
-            menu.classList.toggle("left-0");
-            menu.classList.toggle("bg-white");
-            menu.classList.toggle("shadow-lg");
-            menu.classList.toggle("w-full");
-            menu.classList.toggle("p-4");
-        });
-    
-        // Skjule hello  besked after 3 seconds første gang login
-            document.addEventListener("DOMContentLoaded", () => {
-            const welcome = document.getElementById("welcomeMessage");
-            if (welcome) {
-                setTimeout(() => {
-                    welcome.style.transition = "opacity 0.5s ease";
-                    welcome.style.opacity = "0";
-                    setTimeout(() => welcome.remove(), 500);
-                }, 3000);
-            }
-        });
+             // Load  menu  for mobile
+            document.getElementById("menuToggle").addEventListener("click", () => {
+                const menu = document.getElementById("navMenu");
+                menu.classList.toggle("hidden");
+                menu.classList.toggle("flex");
+                menu.classList.toggle("flex-col");
+                menu.classList.toggle("absolute");
+                menu.classList.toggle("top-16");
+                menu.classList.toggle("left-0");
+                menu.classList.toggle("bg-white");
+                menu.classList.toggle("shadow-lg");
+                menu.classList.toggle("w-full");
+                menu.classList.toggle("p-4");
+            });
 
-        //  Tilføj noget filter
-           document.addEventListener('DOMContentLoaded', function () {
-        // ------Filter Reservation--------
-        initColorFilter({
-            wrapper: '#reservationFilters',
-            table: '#reservationTable',
-            search: '#resvSearch'
+            // Skjule hello  besked after 3 seconds første gang login
+                document.addEventListener("DOMContentLoaded", () => {
+                const welcome = document.getElementById("welcomeMessage");
+                if (welcome) {
+                    setTimeout(() => {
+                        welcome.style.transition = "opacity 0.5s ease";
+                        welcome.style.opacity = "0";
+                        setTimeout(() => welcome.remove(), 500);
+                    }, 3000);
+                }
+            });
+
+            //  Tilføj noget filter
+               document.addEventListener('DOMContentLoaded', function () {
+            // ------Filter Reservation--------
+            initColorFilter({
+                wrapper: '#reservationFilters',
+                table: '#reservationTable',
+                search: '#resvSearch'
+            });
+            // ------Filter Loan--------
+            initColorFilter({
+                wrapper: '#loanFilters',
+                table: '#loanTable',
+                search: '#loanSearch'
+            });
+            // ------Filter Equipment--------
+            initColorFilter({
+                wrapper: '#equipFilters',
+                table: '#equipmentTable',
+                search: '#equipSearch'
+            });
         });
-        // ------Filter Loan--------
-        initColorFilter({
-            wrapper: '#loanFilters',
-            table: '#loanTable',
-            search: '#loanSearch'
-        });
-        // ------Filter Equipment--------
-        initColorFilter({
-            wrapper: '#equipFilters',
-            table: '#equipmentTable',
-            search: '#equipSearch'
-        });
-    });
 
 
 

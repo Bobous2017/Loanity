@@ -29,7 +29,10 @@
     </div>
     <div>
         <label asp-for="Status" class="block font-medium text-gray-700"></label>
-        <input asp-for="Status" class="w-full border rounded-lg px-3 py-2" />
+        <select asp-for="Status"
+                asp-items="Html.GetEnumSelectList<Loanity.Domain.Statuses.ReservationStatus>()"
+                class="w-full border rounded-lg px-3 py-2"></select>
+        <span asp-validation-for="Status" class="text-red-600"></span>
     </div>
 
     <div class="flex gap-4 mt-6">

@@ -31,13 +31,18 @@ public class EquipmentController : CrudControllerWeb<EquipmentDto>
     public override async Task<IActionResult> Create(EquipmentDto dto)
     {
         var result = await base.Create(dto);
-        if (result is RedirectToActionResult)
-            return result;
 
-        // Failed → re-fetch categories
+        if (result is RedirectToActionResult)
+        {
+            TempData["Success"] = "Equipment was successfully created!";
+            return result;
+        }
+
+        TempData["Error"] = "Failed to create equipment. Please check your input.";
         await LoadCategories();
         return View(dto);
     }
+
 
     // ------------- Custom Update View (with dropdown)
     public override async Task<IActionResult> Update(int id)
@@ -50,12 +55,28 @@ public class EquipmentController : CrudControllerWeb<EquipmentDto>
     public override async Task<IActionResult> Update(int id, EquipmentDto dto)
     {
         var result = await base.Update(id, dto);
-        if (result is RedirectToActionResult)
-            return result;
 
+        if (result is RedirectToActionResult)
+        {
+            TempData["Success"] = "Equipment was updated successfully!";
+            return result;
+        }
+
+        TempData["Error"] = "Failed to update equipment. Please check your input.";
         await LoadCategories();
         return View(dto);
     }
 
-   
+    public async Task<IActionResult> ByCategory(string name)
+    {
+        var equipment = await _http.GetFromJsonAsync<List<EquipmentDto>>(
+            $"{_baseUrl}/category/{name}");
+
+        ViewBag.CategoryName = name;
+        return View(equipment);  // ← this is a list!
+    }
+
+
+
+
 }

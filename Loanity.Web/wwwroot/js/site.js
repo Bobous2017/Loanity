@@ -60,3 +60,14 @@ function initColorFilter({ wrapper, table, search }) {
 // expose it globally for your views
 window.initColorFilter = initColorFilter;
 
+
+
+//  Hidde alert messages after a few seconds
+setTimeout(() => {
+    const alerts = document.querySelectorAll('.alert-message');
+    alerts.forEach(el => {
+        el.style.transition = "opacity 0.5s ease";
+        el.style.opacity = "0";
+        setTimeout(() => el.remove(), 500);
+    });
+}, 3000); // Hide after 3 sec

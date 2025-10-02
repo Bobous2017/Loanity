@@ -26,25 +26,41 @@ namespace Loanity.Web.Controllers
         public override async Task<IActionResult> Create(Reservation reservation)
         {
             var res = await _http.PostAsJsonAsync($"{_actionBaseUrl}/create", reservation);
-            return res.IsSuccessStatusCode
-                ? RedirectToAction("Read")
-                : View(reservation);
+
+            if (res.IsSuccessStatusCode)
+            {
+                TempData["Success"] = "Reservation was successfully created!";
+                return RedirectToAction("Read");
+            }
+
+            TempData["Error"] = "Failed to create reservation. Please check the form.";
+            return View(reservation);
         }
 
+
         // ---------------- OVERRIDE UPDATE ----------------
+        // ------help for dropdowns------
         public override async Task<IActionResult> Update(int id)
         {
             var reservation = await _http.GetFromJsonAsync<Reservation>($"{_baseUrl}/{id}");
             return View(reservation);
         }
 
+
         [HttpPost]
         public override async Task<IActionResult> Update(int id, Reservation reservation)
         {
             var res = await _http.PutAsJsonAsync($"{_actionBaseUrl}/update", reservation);
-            return res.IsSuccessStatusCode
-                ? RedirectToAction("Read")
-                : View(reservation);
+
+            if (res.IsSuccessStatusCode)
+            {
+                TempData["Success"] = "Reservation was updated successfully!";
+                return RedirectToAction("Read");
+            }
+
+            TempData["Error"] = "Failed to update reservation. Please review the form.";
+            return View(reservation);
         }
+
     }
 }

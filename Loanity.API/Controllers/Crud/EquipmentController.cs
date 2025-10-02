@@ -58,5 +58,17 @@ namespace Loanity.API.Controllers.Crud
                                          .ToListAsync();
             return Ok(equipmentList);
         }
+
+        [HttpGet("category/{name}")]
+        public async Task<IActionResult> GetByCategory(string name)
+        {
+            var equipment = await _db.Equipment
+                .Include(e => e.Category)
+                .Where(e => e.Category.Name == name)
+                .ToListAsync();
+
+            return Ok(equipment);
+        }
+
     }
 }

@@ -16,10 +16,17 @@ namespace Loanity.Web.Controllers
         public override async Task<IActionResult> Create(Role role)
         {
             var result = await base.Create(role);
-            if (!ModelState.IsValid)
-                ViewBag.Message = "Creation failed";
-            return result;
+
+            if (result is RedirectToActionResult)
+            {
+                TempData["Success"] = "Role created successfully!";
+                return result;
+            }
+
+            TempData["Error"] = "Failed to create role. Please check the input.";
+            return View(role);
         }
+
 
     }
 }

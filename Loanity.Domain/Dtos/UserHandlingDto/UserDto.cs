@@ -11,7 +11,7 @@ namespace Loanity.Domain.Dtos.UserHandlingDto
         string FirstName,
         string LastName,
         string UserName,
-        string PassWord,
+        string? PassWord,
         string? RfidChip,
         string Email,
         string? Phone,

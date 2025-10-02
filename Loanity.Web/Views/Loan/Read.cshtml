@@ -46,8 +46,10 @@
                     <td class="px-4 py-2">@loan.StartAt.ToString("dd.MM.yyyy HH.mm.ss")</td>
                     <td class="px-4 py-2">@loan.DueAt.ToString("dd.MM.yyyy HH.mm.ss")</td>
                     <td class="px-4 py-2">
-                        @(loan.ReturnedAt?.ToString("dd.MM.yyyy HH.mm.ss") ??
-                          "<span class='text-gray-400 italic'>Not Returned</span>")
+                        @(loan.ReturnedAt != null
+                                            ? loan.ReturnedAt.Value.ToString("dd.MM.yyyy HH.mm.ss")
+                                            : Html.Raw("<span class='text-gray-400 italic'>Not Returned</span>"))
+
                     </td>
                     <td class="px-4 py-2">
                         <span class="px-2 py-1 rounded text-sm

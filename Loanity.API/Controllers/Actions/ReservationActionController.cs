@@ -27,8 +27,16 @@ namespace Loanity.API.Controllers.Actions
                     reservation.StartAt,
                     reservation.EndAt
                 );
+                return Ok(new
+                {
+                    created.Id,
+                    created.UserId,
+                    created.EquipmentId,
+                    created.StartAt,
+                    created.EndAt,
+                    created.Status
+                });
 
-                return Ok(created);
             }
             catch (InvalidOperationException ex)
             {

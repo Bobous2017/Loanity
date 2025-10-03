@@ -1,3 +1,4 @@
+using Loanity.Domain.Dtos;
 using Loanity.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,12 +10,17 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    private readonly HttpClient _http;
+    private readonly string _baseUrl;
+    public HomeController(ILogger<HomeController> logger, IHttpClientFactory factory)
     {
         _logger = logger;
+        _http = factory.CreateClient("LoanityAPI");
+        _baseUrl = "http://10.130.56.53:5253/api/equipment/categories-with-quantity"; 
     }
+
     [Authorize]
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
         // Example check: redirect if not logged in
         if (!User.Identity.IsAuthenticated)
@@ -22,7 +28,9 @@ public class HomeController : Controller
             return RedirectToAction("Index", "Login");
         }
 
-        return View();
+        var categories = await _http.GetFromJsonAsync<List<EquipmentCategoryDto>>($"{_baseUrl}");
+        return View(categories);
+
     }
 
     public IActionResult Statistics()

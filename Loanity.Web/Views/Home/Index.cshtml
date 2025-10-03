@@ -1,4 +1,7 @@
-﻿@{
+﻿@model List<Loanity.Domain.Dtos.EquipmentCategoryDto>
+
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -25,92 +28,43 @@
         <h2 class="text-2xl font-bold text-gray-800 mb-8 text-center">Equipment Categories</h2>
 
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+            @foreach (var category in Model)
+            {
+                <a asp-controller="Equipment"
+                   asp-action="ByCategory"
+                   asp-route-name="@category.Name"
+                   class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
 
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Laptops"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-laptop fa-2x text-indigo-600 mb-3"></i>
-                <h3 class="font-semibold">Laptops</h3>
-            </a>
+                    
+                    <h3 class="font-semibold">@category.Name</h3>
+                    @{
+                        (string icon, string color) = category.Name.ToLower() switch
+                        {
+                            "laptops" => ("fa-laptop", "text-indigo-600"),
+                            "tablet" => ("fa-tablet-screen-button", "text-green-600"),
+                            "phones" => ("fa-mobile", "text-green-600"),
+                            "keyboards" => ("fa-keyboard", "text-purple-600"),
+                            "mouse" => ("fa-computer-mouse", "text-gray-700"),
+                            "printers" => ("fa-print", "text-pink-600"),
+                            "storage" => ("fa-hard-drive", "text-yellow-600"),
+                            "cameras" => ("fa-camera", "text-red-500"),
+                            "headsets" => ("fa-headset", "text-emerald-600"),
+                            "networking" => ("fa-network-wired", "text-sky-600"),
+                            "cloud" => ("fa-cloud", "text-cyan-600"),
+                            "monitors" => ("fa-desktop", "text-indigo-400"),
+                            "gaming" => ("fa-gamepad", "text-orange-500"),
+                            "accessories" => ("fa-toolbox", "text-orange-500"),
+                            "cables" => ("fa-gamepad", "text-orange-500"),
+                            _ => ("fa-box", "text-indigo-600")
+                        };
+                    }
+                    <i class="fa-solid @icon fa-2x @color mb-3"></i>
 
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Tablets"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-tablet-screen-button fa-2x text-green-600 mb-3"></i>
-                <h3 class="font-semibold">Tablets</h3>
-            </a>
 
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Phones"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-tablet-screen-button fa-2x text-green-600 mb-3"></i>
-                <h3 class="font-semibold">Phones</h3>
-            </a>
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Keyboards"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-keyboard fa-2x text-purple-600 mb-3"></i>
-                <h3 class="font-semibold">Keyboards</h3>
-            </a>
-
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Mouse"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-computer-mouse fa-2x text-gray-700 mb-3"></i>
-                <h3 class="font-semibold">Mouse</h3>
-            </a>
-
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Printers"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-print fa-2x text-pink-600 mb-3"></i>
-                <h3 class="font-semibold">Printers</h3>
-            </a>
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Storage"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-hard-drive fa-2x text-yellow-600 mb-3"></i>
-                <h3 class="font-semibold">Storage</h3>
-            </a>
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Cameras"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-camera fa-2x text-red-500 mb-3"></i>
-                <h3 class="font-semibold">Cameras</h3>
-            </a>
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Headsets"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-headset fa-2x text-emerald-600 mb-3"></i>
-                <h3 class="font-semibold">Headsets</h3>
-            </a>
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Networking"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-network-wired fa-2x text-sky-600 mb-3"></i>
-                <h3 class="font-semibold">Networking</h3>
-            </a>
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Cloud"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-cloud fa-2x text-cyan-600 mb-3"></i>
-                <h3 class="font-semibold">Cloud</h3>
-            </a>
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Monitors"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-desktop fa-2x text-indigo-400 mb-3"></i>
-                <h3 class="font-semibold">Monitors</h3>
-            </a>
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Gaming"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-gamepad fa-2x text-orange-500 mb-3"></i>
-                <h3 class="font-semibold">Gaming</h3>
-            </a>
-
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Accessories"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-gamepad fa-2x text-orange-500 mb-3"></i>
-                <h3 class="font-semibold">Accessories</h3>
-            </a>
-
-            <a asp-controller="Equipment" asp-action="ByCategory" asp-route-name="Accessories"
-               class="block bg-white rounded-xl p-6 text-center hover:shadow-lg transition">
-                <i class="fa-solid fa-gamepad fa-2x text-orange-500 mb-3"></i>
-                <h3 class="font-semibold">Cables</h3>
-            </a>
+                    <span class="text-sm text-gray-600">Qty: @category.Quantity</span>
+                </a>
+            }
 
         </div>
-
     </main>
 </div>
-
-

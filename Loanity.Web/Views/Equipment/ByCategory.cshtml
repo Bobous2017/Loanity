@@ -45,6 +45,13 @@
 </div>
 @* -------------------------------------------------- *@
 
+@* Category status *@
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 text-sm">
+    <div class="p-4 bg-gray-100 rounded shadow">Total: <strong>@ViewBag.Total</strong></div>
+    <div class="p-4 bg-green-100 rounded shadow">Available: <strong>@ViewBag.Available</strong></div>
+    <div class="p-4 bg-yellow-100 rounded shadow">Reserved: <strong>@ViewBag.Reserved</strong></div>
+    <div class="p-4 bg-red-100 rounded shadow">Loaned: <strong>@ViewBag.Loaned</strong></div>
+</div>
 
 <div class="overflow-x-auto bg-white shadow rounded-lg">
     <table id="equipmentTable" class="table w-full border-collapse">

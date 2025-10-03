@@ -10,11 +10,11 @@
     --closed: #64748b; /* slate */
 
 
-    --available: #22c55e;
+    --available: #dcfce7;
     --loaned: #0ea5e9;
-    --reserved: #f59e0b;
-    --damaged: #ef4444;
-    --lost: #64748b;
+    --reserved: #fef9c3;
+    --damaged: #fee2e2;
+    --lost: #ff0000;
 }
 
 .filters {

@@ -16,7 +16,7 @@ public class HomeController : Controller
     {
         _logger = logger;
         _http = factory.CreateClient("LoanityAPI");
-        _baseUrl = "http://10.130.56.53:5253/api/equipment/categories-with-quantity"; 
+        _baseUrl = "http://localhost:5253/api/equipment/categories-with-quantity"; 
     }
 
     [Authorize]

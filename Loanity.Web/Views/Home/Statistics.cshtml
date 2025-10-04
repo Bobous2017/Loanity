@@ -25,13 +25,13 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         async function fetchAndRender() {
-            const res1 = await fetch('http://10.130.56.53:5253/api/statistics/most-loaned');
+            const res1 = await fetch('http://localhost:5253/api/statistics/most-loaned');
             const mostLoaned = await res1.json();
 
-            const res2 = await fetch('http://10.130.56.53:5253/api/statistics/average-loan-duration');
+            const res2 = await fetch('http://localhost:5253/api/statistics/average-loan-duration');
             const average = await res2.json();
 
-            const res3 = await fetch('http://10.130.56.53:5253/api/statistics/most-delays');
+            const res3 = await fetch('http://localhost:5253/api/statistics/most-delays');
             const delays = await res3.json();
 
             // Chart 1: Most Loaned Equipment

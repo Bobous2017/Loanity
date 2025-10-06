@@ -1,0 +1,60 @@
+﻿@using Loanity.Web.Controllers.Auth
+@{
+    Layout = null; /* or use your main layout if you prefer */
+    var loginUrl = Url.Action("Index", "Login", new { ReturnUrl = ViewBag.ReturnUrl });
+    var sessionTimer = SessionTimer.SessionTimeoutSeconds;
+    var sessionTimerByMin = sessionTimer / 60;
+}
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Session udløbet – Loanity</title>
+    <link rel="stylesheet" href="~/css/session.css" />
+
+</head>
+<body>
+
+    <main class="wrap">
+        <div class="logo" aria-label="Bob &amp; Seb | Loanity Udlån-System">
+            <!-- small lock/clock combo icon -->
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M7 11V8a5 5 0 1 1 10 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+                <rect x="4" y="11" width="16" height="10" rx="3" stroke="currentColor" stroke-width="1.6" />
+                <circle cx="12" cy="16" r="3" fill="currentColor" opacity=".12" />
+            </svg>
+            <span>Bob &amp; Seb · Loanity Udlån-System</span>
+        </div>
+
+        <section class="card" role="region" aria-labelledby="sessionTitle">
+            <header class="card-header">
+                <h1 id="sessionTitle" class="title">Session udløbet</h1>
+                <p class="subtitle" id="adminInfo">Administraktoren kan kun registrere dig</p>
+                <div class="divider" role="presentation"></div>
+            </header>
+
+            <div class="actions">
+                <button class="btn btn-disabled" id="regClosed" aria-disabled="true" title="Registrering er lukket">Registrering lukket</button>
+                <a class="btn btn-primary" id="loginBtn" href="@loginUrl">Log ind</a>
+            </div>
+
+            <div class="note" role="status" aria-live="polite">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.6" />
+                    <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <p style="margin:0">
+                    <strong>Sorry!</strong>
+                    <span id="msgLine1">Din session er udløbet – prøv at logge ind igen.</span><br />
+                    <span id="msgLine2">Din session kan maks vare <b id="limitMin">@sessionTimerByMin</b> minutter før systemet nulstiller.</span>
+                </p>
+            </div>
+
+            <div class="footer" id="countdownWrap" hidden>
+                Automatisk omdirigering til login om <span id="count">3</span>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

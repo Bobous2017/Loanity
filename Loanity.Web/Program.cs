@@ -33,10 +33,29 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
         // This makes it expire when browser closes
         options.Cookie.IsEssential = true;
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+
         options.Cookie.SameSite = SameSiteMode.Lax;
         options.Cookie.Name = "LoanityAuth";
         options.Cookie.MaxAge = null; // <= Makes the cookie non-persistent!
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = ctx =>
+            {
+                // let API calls get a 401 (no HTML redirect)
+                if (ctx.Request.Path.StartsWithSegments("/api"))
+                {
+                    ctx.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                }
+
+                // otherwise go to the session-expired page
+                var returnUrl = Uri.EscapeDataString(ctx.Request.Path + ctx.Request.QueryString);
+                ctx.Response.Redirect($"/session-expired?returnUrl={returnUrl}");
+                return Task.CompletedTask;
+            }
+        };
+
     });
 
 
@@ -49,13 +68,15 @@ if (!app.Environment.IsDevelopment())
 }
 
 
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseSession();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseSession();
+
 
 
 app.MapControllerRoute(

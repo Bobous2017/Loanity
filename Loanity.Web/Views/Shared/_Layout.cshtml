@@ -7,6 +7,7 @@
     <title>@ViewData["Title"] - Loanity.Web</title>
     <link rel="stylesheet" href="~/css/filterDot.css" asp-append-version="true" />
 
+
     <!-- TailwindCSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -124,7 +125,12 @@
     <script>
             // Redirect user to Login after session timeout
             const timer = @SessionTimer.SessionTimeoutSeconds;
-            setTimeout(() => window.location.href = '/Login', timer * 1000);
+            // setTimeout(() => window.location.href = '/Login', timer * 1000);
+            setTimeout(() => {
+                const returnUrl = encodeURIComponent(window.location.pathname + window.location.search);
+                window.location.href = '@Url.Action("Expired", "Session")' + '?returnUrl=' + returnUrl;
+            }, timer * 1000);
+
 
              // Load  menu  for mobile
             document.getElementById("menuToggle").addEventListener("click", () => {

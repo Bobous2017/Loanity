@@ -65,7 +65,7 @@ builder.Services.AddCors(options =>
     {
         policy.WithOrigins(
                 "http://localhost:5191",
-                "http://192.168.1.6:5191" // PC LAN origin for Web app if you use it
+                "http://10.130.56.53:5191" // PC LAN origin for Web app if you use it
             )
             .AllowAnyHeader()
             .AllowAnyMethod();

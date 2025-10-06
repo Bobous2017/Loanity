@@ -17,7 +17,7 @@ builder.Services.AddSession(options =>
 // Register HttpClient for API calls
 builder.Services.AddHttpClient("LoanityApi", client =>
 {
-    var apiBaseUrl = builder.Configuration["ApiBaseUrl"] ?? "http://localhost:5253/";
+    var apiBaseUrl = builder.Configuration["ApiBaseUrl"] ?? "http://10.130.56.53:5253/";
     client.BaseAddress = new Uri(apiBaseUrl);
 });
 

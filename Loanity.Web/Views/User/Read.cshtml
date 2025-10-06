@@ -55,6 +55,7 @@
     <table id="userTable" class="w-full border-collapse">
         <thead class="bg-gray-100 text-gray-700">
             <tr>
+                <th class="px-4 py-2 text-left">Id</th>
                 <th class="px-4 py-2 text-left">First Name</th>
                 <th class="px-4 py-2 text-left">Last Name</th>
                 <th class="px-4 py-2 text-left">User Name</th>
@@ -69,6 +70,7 @@
             {
                 var role = user.RoleName?.ToLowerInvariant() ?? "unknown";
                 <tr class="border-t hover:bg-gray-50" data-status="@role">
+                    <td class="px-4 py-2">@user.Id</td>
                     <td class="px-4 py-2">@user.FirstName</td>
                     <td class="px-4 py-2">@user.LastName</td>
                     <td class="px-4 py-2">
@@ -97,21 +99,7 @@
                     <td class="px-4 py-2">@user.Phone</td>
                     <td class="px-4 py-2">@Html.Raw(RoleIcon.For(user.RoleName))</td>
 
-                  @*   <td class="px-4 py-2">
-                        @if (user.RoleName?.ToLower() == "manager")
-                        {
-                            <span title="Manager 👔">👔 @user.RoleName</span>
-                        }
-                        else if (user.RoleName?.ToLower() == "staff")
-                        {
-                            <span title="Staff 👩‍💼">👩‍💼 @user.RoleName</span>
-                        }
-                        else
-                        {
-                            @user.RoleName
-                        }
-                    </td>
- *@
+
 
                     <td class="px-4 py-2 space-x-2">
                         <a asp-controller="User" asp-action="Details" asp-route-id="@user.Id"

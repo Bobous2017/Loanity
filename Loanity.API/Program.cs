@@ -85,9 +85,10 @@ if (app.Environment.IsDevelopment())
 
 // Middleware pipeline
 app.UseHttpsRedirection();
+app.UseCors("AllowFrontend"); // Enable CORS
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("AllowFrontend"); // Enable CORS
+
 
 app.MapControllers();
 

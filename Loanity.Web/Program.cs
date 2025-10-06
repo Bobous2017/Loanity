@@ -1,4 +1,3 @@
-
 using Loanity.Web.Controllers.Auth;
 using Loanity.Web.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -18,9 +17,8 @@ builder.Services.AddSession(options =>
 // Register HttpClient for API calls
 builder.Services.AddHttpClient("LoanityApi", client =>
 {
-    //client.BaseAddress = new Uri("http://localhost:5253/"); // use your API’s actual port
-    client.BaseAddress = new Uri("http://10.130.56.53:5253/"); // use your API’s actual port
-
+    var apiBaseUrl = builder.Configuration["ApiBaseUrl"] ?? "http://localhost:5253/";
+    client.BaseAddress = new Uri(apiBaseUrl);
 });
 
 builder.Services.AddScoped<NotificationService>();

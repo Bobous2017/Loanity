@@ -63,32 +63,30 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:5191")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        policy.WithOrigins(
+                "http://localhost:5191",
+                "http://192.168.1.6:5191" // PC LAN origin for Web app if you use it
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
     });
 });
 
 var app = builder.Build();
 
-// Enable Swagger UI
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Loanity API v1");
-    });
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Loanity API v1"));
+}
+else
+{
+    app.UseHttpsRedirection();
 }
 
-
-// Middleware pipeline
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseCors("AllowFrontend"); // Enable CORS
-
+app.UseCors("AllowFrontend");
 app.MapControllers();
-
 app.Run();

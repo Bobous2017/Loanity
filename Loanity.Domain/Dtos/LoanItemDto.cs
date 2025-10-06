@@ -8,7 +8,7 @@ namespace Loanity.Domain.Dtos
 {
     public record LoanItemDto(
          int EquipmentId,
-         string? EquipmentName
+         string? EquipmentName,
+         string? QrCode
      );
-
 }

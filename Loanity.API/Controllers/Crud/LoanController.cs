@@ -33,7 +33,8 @@ namespace Loanity.API.Controllers.Crud
                 loan.ReservationId,
                 loan.Items.Select(item => new LoanItemDto(
                     item.EquipmentId,
-                    item.Equipment.Name
+                    item.Equipment.Name,
+                    item.Equipment.QrCode
                 )).ToList()
             )).ToList();
 
@@ -61,7 +62,9 @@ namespace Loanity.API.Controllers.Crud
                 loan.ReservationId,
                 loan.Items.Select(item => new LoanItemDto(
                     item.EquipmentId,
-                    item.Equipment.Name
+                    item.Equipment.Name,
+                    item.Equipment.QrCode
+
                 )).ToList()
             );
 
@@ -90,7 +93,9 @@ namespace Loanity.API.Controllers.Crud
                 loan.ReservationId,
                 loan.Items.Select(item => new LoanItemDto(
                     item.EquipmentId,
-                    item.Equipment.Name
+                    item.Equipment.Name,
+                    item.Equipment.QrCode
+
                 )).ToList()
             )).ToList();
 

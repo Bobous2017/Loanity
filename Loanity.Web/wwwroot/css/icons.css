@@ -1,0 +1,56 @@
+﻿.role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .2rem .5rem;
+    border-radius: .5rem;
+    background: #fff7ed; /* light badge */
+}
+
+    .role-badge::before {
+        content: "";
+        width: .55rem;
+        height: .55rem;
+        border-radius: 9999px;
+        background: #9ca3af; /* default gray dot */
+        box-shadow: 0 0 0 2px rgba(0,0,0,.03) inset;
+    }
+    /* icon after the text (defaults to 🧩) */
+    .role-badge::after {
+        content: "  🧩";
+    }
+
+    /* Match by substring on the data-role value */
+    .role-badge[data-role*="admin"]::before {
+        background: #10b981;
+    }
+    /* green */
+    .role-badge[data-role*="teacher"]::before {
+        background: #f59e0b;
+    }
+    /* amber */
+    .role-badge[data-role*="student"]::before {
+        background: #6366f1;
+    }
+    /* indigo */
+    .role-badge[data-role*="user"]::before {
+        background: #6b7280;
+    }
+    /* gray */
+
+    /* Role-specific emoji */
+    .role-badge[data-role*="admin"]::after {
+        content: "  👨‍💻";
+    }
+
+    .role-badge[data-role*="teacher"]::after {
+        content: "  👩‍🏫";
+    }
+
+    .role-badge[data-role*="student"]::after {
+        content: "  🎓";
+    }
+
+    .role-badge[data-role*="user"]::after {
+        content: "  👔";
+    }

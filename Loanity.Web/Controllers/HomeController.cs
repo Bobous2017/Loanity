@@ -1,4 +1,5 @@
 using Loanity.Domain.Dtos;
+using Loanity.Domain.Dtos.CategoryType;
 using Loanity.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

@@ -1,4 +1,5 @@
 ﻿@using Loanity.Domain.Dtos.UserHandlingDto
+@using Loanity.Domain.Entities
 @model List<UserDto>
 @{
     ViewData["Title"] = "User List";
@@ -94,7 +95,9 @@
 
 
                     <td class="px-4 py-2">@user.Phone</td>
-                    <td class="px-4 py-2">
+                    <td class="px-4 py-2">@Html.Raw(RoleIcon.For(user.RoleName))</td>
+
+                  @*   <td class="px-4 py-2">
                         @if (user.RoleName?.ToLower() == "manager")
                         {
                             <span title="Manager 👔">👔 @user.RoleName</span>
@@ -108,7 +111,7 @@
                             @user.RoleName
                         }
                     </td>
-
+ *@
 
                     <td class="px-4 py-2 space-x-2">
                         <a asp-controller="User" asp-action="Details" asp-route-id="@user.Id"

@@ -1,4 +1,4 @@
-﻿@model List<Loanity.Domain.Dtos.EquipmentCategoryDto>
+﻿@model List<Loanity.Domain.Dtos.CategoryType.EquipmentCategoryDto>
 
 
 @{
@@ -28,7 +28,7 @@
         <h2 class="text-2xl font-bold text-gray-800 mb-8 text-center">Equipment Categories</h2>
 
         <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
-            @foreach (var category in Model)
+        @foreach (var category in Model)
             {
                 <a asp-controller="Equipment"
                    asp-action="ByCategory"
@@ -38,33 +38,34 @@
                     
                     <h3 class="font-semibold">@category.Name</h3>
                     @{
-                        (string icon, string color) = category.Name.ToLower() switch
+                        var iconKey = (category.Icon ?? "box").ToLower();
+                        (string fa, string color) = iconKey switch
                         {
-                            "laptops" => ("fa-laptop", "text-indigo-600"),
+                            "laptop" => ("fa-laptop", "text-indigo-600"),
                             "tablet" => ("fa-tablet-screen-button", "text-green-600"),
-                            "phones" => ("fa-mobile", "text-green-600"),
-                            "keyboards" => ("fa-keyboard", "text-purple-600"),
+                            "keyboard" => ("fa-keyboard", "text-purple-600"),
+                            "phone" => ("fa-mobile", "text-green-600"),
                             "mouse" => ("fa-computer-mouse", "text-gray-700"),
-                            "printers" => ("fa-print", "text-pink-600"),
+                            "printer" => ("fa-print", "text-pink-600"),
                             "storage" => ("fa-hard-drive", "text-yellow-600"),
-                            "cameras" => ("fa-camera", "text-red-500"),
-                            "headsets" => ("fa-headset", "text-emerald-600"),
-                            "networking" => ("fa-network-wired", "text-sky-600"),
+                            "camera" => ("fa-camera", "text-red-500"),
+                            "headset" => ("fa-headset", "text-emerald-600"),
+                            "network" => ("fa-network-wired", "text-sky-600"),
                             "cloud" => ("fa-cloud", "text-cyan-600"),
-                            "monitors" => ("fa-desktop", "text-indigo-400"),
-                            "gaming" => ("fa-gamepad", "text-orange-500"),
-                            "accessories" => ("fa-toolbox", "text-orange-500"),
-                            "cables" => ("fa-gamepad", "text-orange-500"),
+                            "monitor" => ("fa-desktop", "text-indigo-400"),
+                            "gamepad" => ("fa-gamepad", "text-orange-500"),
+                            "cable" => ("fa-plug", "text-orange-500"),
+                            "toolbox" => ("fa-toolbox", "text-orange-500"),
                             _ => ("fa-box", "text-indigo-600")
                         };
                     }
-                    <i class="fa-solid @icon fa-2x @color mb-3"></i>
-
-
+                    <i class="fa-solid @fa fa-2x @color mb-3"></i>
                     <span class="text-sm text-gray-600">Qty: @category.Quantity</span>
-                </a>
-            }
 
+                    <div class="cat-icon" data-icon="@category.Icon"><span class="ico"></span></div>
+              
+                </a>
+            } 
         </div>
     </main>
 </div>

@@ -67,14 +67,29 @@ public class EquipmentController : CrudControllerWeb<EquipmentDto>
         return View(dto);
     }
 
+    //public async Task<IActionResult> ByCategory(string name)
+    //{
+    //    var equipment = await _http.GetFromJsonAsync<List<EquipmentDto>>(
+    //        $"{_baseUrl}/category/{name}");
+
+    //    ViewBag.CategoryName = name;
+    //    return View(equipment);  // ← this is a list!
+    //}
+
     public async Task<IActionResult> ByCategory(string name)
     {
-        var equipment = await _http.GetFromJsonAsync<List<EquipmentDto>>(
-            $"{_baseUrl}/category/{name}");
+        var response = await _http.GetFromJsonAsync<CategorySummaryDto>(
+            $"{_baseUrl}/category-summary/{name}");
 
         ViewBag.CategoryName = name;
-        return View(equipment);  // ← this is a list!
+        ViewBag.Total = response.Total;
+        ViewBag.Available = response.Available;
+        ViewBag.Reserved = response.Reserved;
+        ViewBag.Loaned = response.Loaned;
+
+        return View(response.Equipment);
     }
+
 
 
 

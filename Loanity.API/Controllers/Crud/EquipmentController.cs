@@ -1,5 +1,6 @@
 ﻿using Loanity.API.Controllers.Common;
 using Loanity.Domain.Entities;
+using Loanity.Domain.Statuses;
 using Loanity.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -59,6 +60,7 @@ namespace Loanity.API.Controllers.Crud
             return Ok(equipmentList);
         }
 
+        // ----------------- READ by Category Name -----------------
         [HttpGet("category/{name}")]
         public async Task<IActionResult> GetByCategory(string name)
         {
@@ -69,6 +71,48 @@ namespace Loanity.API.Controllers.Crud
 
             return Ok(equipment);
         }
+
+        // ----------------- Category Summary -----------------
+        [HttpGet("category-summary/{name}")]
+        public async Task<IActionResult> GetSummary(string name)
+        {
+            var items = await _db.Equipment
+                                 .Include(e => e.Category)
+                                 .Where(e => e.Category.Name == name)
+                                 .ToListAsync();
+
+            var result = new
+            {
+                Total = items.Count,
+                Available = items.Count(e => e.Status == EquipmentStatus.Available),
+                Reserved = items.Count(e => e.Status == EquipmentStatus.Reserved),
+                Loaned = items.Count(e => e.Status == EquipmentStatus.Loaned),
+                Damaged = items.Count(e => e.Status == EquipmentStatus.Damaged),
+                Lost = items.Count(e => e.Status == EquipmentStatus.Lost),
+                Equipment = items
+            };
+
+            return Ok(result);
+        }
+
+        // ----------------- All Categories With Quantity -----------------
+        [HttpGet("categories-with-quantity")]
+        public async Task<IActionResult> GetCategoriesWithQuantity()
+        {
+            var data = await _db.EquipmentCategories
+                .Select(c => new
+                {
+                    c.Id,
+                    c.Name,
+                    Quantity = _db.Equipment.Count(e => e.CategoryId == c.Id)
+                })
+                .ToListAsync();
+
+            return Ok(data);
+        }
+
+
+
 
     }
 }

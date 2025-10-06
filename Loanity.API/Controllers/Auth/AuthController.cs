@@ -30,7 +30,6 @@
         private const int MAX_ATTEMPTS = 3;
         private static readonly TimeSpan COOLDOWN = TimeSpan.FromMinutes(1);
 
-
         [Authorize]
         [HttpGet]
         public IActionResult GetSecureData()

@@ -1,4 +1,6 @@
 ﻿using Loanity.API.Controllers.Common;
+using Loanity.Domain.Dtos;
+using Loanity.Domain.Dtos.CategoryType;
 using Loanity.Domain.Entities;
 using Loanity.Domain.Statuses;
 using Loanity.Infrastructure;
@@ -76,43 +78,47 @@ namespace Loanity.API.Controllers.Crud
         [HttpGet("category-summary/{name}")]
         public async Task<IActionResult> GetSummary(string name)
         {
-            var items = await _db.Equipment
-                                 .Include(e => e.Category)
-                                 .Where(e => e.Category.Name == name)
-                                 .ToListAsync();
+            // 1) Read Quantity from DB category row
+            var cat = await _db.EquipmentCategories
+                .Where(c => c.Name == name)
+                .Select(c => new { c.Id, c.Quantity })
+                .SingleOrDefaultAsync();
 
-            var result = new
+            if (cat is null) return NotFound();
+
+            // 2) Compute breakdown from Equipment using CategoryId
+            var items = await _db.Equipment
+                .Where(e => e.CategoryId == cat.Id)
+                .ToListAsync();
+
+            return Ok(new
             {
-                Total = items.Count,
+                Total = cat.Quantity, // <- from DB
                 Available = items.Count(e => e.Status == EquipmentStatus.Available),
                 Reserved = items.Count(e => e.Status == EquipmentStatus.Reserved),
                 Loaned = items.Count(e => e.Status == EquipmentStatus.Loaned),
                 Damaged = items.Count(e => e.Status == EquipmentStatus.Damaged),
                 Lost = items.Count(e => e.Status == EquipmentStatus.Lost),
                 Equipment = items
-            };
-
-            return Ok(result);
+            });
         }
+
 
         // ----------------- All Categories With Quantity -----------------
         [HttpGet("categories-with-quantity")]
         public async Task<IActionResult> GetCategoriesWithQuantity()
         {
             var data = await _db.EquipmentCategories
-                .Select(c => new
+                .Select(x => new EquipmentCategoryDto
                 {
-                    c.Id,
-                    c.Name,
-                    Quantity = _db.Equipment.Count(e => e.CategoryId == c.Id)
+                    Id = x.Id,
+                    Name = x.Name,
+                    Quantity = x.Quantity,
+                    Icon = x.Icon
                 })
                 .ToListAsync();
-
             return Ok(data);
         }
-
-
-
 
     }
 }

@@ -1,27 +1,38 @@
 ﻿@model Loanity.Domain.Dtos.CategoryType.CategoryDto
 @{
     ViewData["Title"] = "Create Category";
+    // Keep in sync with AllowedIcons
+    string[] icons = { "box","laptop","tablet","keyboard","phone","mouse","printer","storage",
+                       "camera","headset","network","cloud","monitor","gamepad","cable","toolbox" };
 }
-
 <h2 class="text-2xl font-bold text-gray-800 mb-6">Create Category</h2>
 
-<form asp-action="Create" method="post"
-      class="bg-white shadow rounded-lg p-6 space-y-4">
-
+<form asp-action="Create" method="post" class="bg-white shadow rounded-lg p-6 space-y-4">
     <div>
-        <label asp-for="Name" class="block font-medium text-gray-700"></label>
+        <label asp-for="Name" class="block font-medium">Name</label>
         <input asp-for="Name" class="w-full border rounded-lg px-3 py-2" />
         <span asp-validation-for="Name" class="text-red-600"></span>
     </div>
 
+    <div>
+        <label asp-for="Quantity" class="block font-medium">Quantity</label>
+        <input asp-for="Quantity" type="number" min="0" class="w-40 border rounded-lg px-3 py-2" />
+        <span asp-validation-for="Quantity" class="text-red-600"></span>
+    </div>
+
+    <div>
+        <label asp-for="Icon" class="block font-medium">Icon</label>
+        <select asp-for="Icon" class="w-64 border rounded-lg px-3 py-2">
+            @foreach (var key in icons)
+            {
+                <option value="@key">@key</option>
+            }
+        </select>
+        <span class="text-sm text-gray-500">Key matches your CSS mapping.</span>
+    </div>
+
     <div class="flex gap-4 mt-6">
-        <button type="submit"
-                class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow hover:bg-indigo-700">
-            Save
-        </button>
-        <a asp-action="Read"
-           class="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
-            Cancel
-        </a>
+        <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-lg">Save</button>
+        <a asp-action="Read" class="px-4 py-2 bg-gray-200 rounded-lg">Cancel</a>
     </div>
 </form>

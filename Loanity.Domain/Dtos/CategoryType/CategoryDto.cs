@@ -9,7 +9,8 @@ namespace Loanity.Domain.Dtos.CategoryType
     public record CategoryDto
     (
         int Id,
-        string Name
-
+        string Name,
+         int Quantity,
+        string Icon = "box" // key used by your CSS / font icons
     );
 }

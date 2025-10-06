@@ -10,6 +10,7 @@ namespace Loanity.Domain.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
-
+        public int Quantity { get; set; }
+        public string Icon { get; set; } = "box"; // key used by your CSS / font icons
     }
 }

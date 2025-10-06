@@ -12,46 +12,39 @@ namespace Loanity.Domain.Entities
 {
     public class GenerateQRCode
     {
-
-        public MemoryStream GenerateQRCodeGen(string qrText, SKBitmap? _qrCodeBitmap)
+        // Updated: userId is now optional (nullable) and we always return a MemoryStream
+        public MemoryStream GenerateQRCodeGen(string qrText, int? userId, SKBitmap? qrCodeBitmap = null)
         {
-            if (_qrCodeBitmap == null)
-            {
-                // Initialize the bitmap with default values if it's null
-                _qrCodeBitmap = new SKBitmap(300, 300); // Default size
-            }
+            if (string.IsNullOrWhiteSpace(qrText))
+                throw new ArgumentException("qrText is required", nameof(qrText));
 
-            if (!string.IsNullOrWhiteSpace(qrText))
-            {
-                var random = new Random();
-                var randomData = $"{qrText}";
+            // Build payload (include user id if provided)
+            var payload = userId.HasValue ? $"{qrText}-{userId.Value}" : qrText;
 
-                var qrCodeWriter = new ZXing.BarcodeWriterPixelData
+            // Ensure bitmap instance
+            qrCodeBitmap ??= new SKBitmap(300, 300);
+
+            var qrCodeWriter = new ZXing.BarcodeWriterPixelData
+            {
+                Format = ZXing.BarcodeFormat.QR_CODE,
+                Options = new ZXing.Common.EncodingOptions
                 {
-                    Format = ZXing.BarcodeFormat.QR_CODE,
-                    Options = new ZXing.Common.EncodingOptions
-                    {
-                        Width = 250,
-                        Height = 250
-                    }
-                };
+                    Width = 250,
+                    Height = 250
+                }
+            };
 
-                var pixelData = qrCodeWriter.Write(randomData);
-                var stream = new MemoryStream();
+            var pixelData = qrCodeWriter.Write(payload);
+            var stream = new MemoryStream();
 
-                // Convert pixel data to SKBitmap
-                _qrCodeBitmap = new SKBitmap(pixelData.Width, pixelData.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
-                Marshal.Copy(pixelData.Pixels, 0, _qrCodeBitmap.GetPixels(), pixelData.Pixels.Length);
+            // Create bitmap from pixel data
+            qrCodeBitmap = new SKBitmap(pixelData.Width, pixelData.Height, SKColorType.Bgra8888, SKAlphaType.Premul);
+            Marshal.Copy(pixelData.Pixels, 0, qrCodeBitmap.GetPixels(), pixelData.Pixels.Length);
 
-                // Encode the bitmap to the stream
-                _qrCodeBitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
-                stream.Seek(0, SeekOrigin.Begin); // Reset stream position
-
-                // Return the stream
-                return stream;
-            }
-
-            return null; // Handle cases where the text is null or empty
+            // Encode to PNG
+            qrCodeBitmap.Encode(stream, SKEncodedImageFormat.Png, 100);
+            stream.Position = 0;
+            return stream; // Never return null now
         }
 
         public async Task SendEmailWithQRCode(
@@ -62,7 +55,6 @@ namespace Loanity.Domain.Entities
             DateTime endAt,
             string qrCodeBase64,
             string reservationCode)
-
         {
             var smtpClient = new SmtpClient("smtp.gmail.com")
             {
@@ -96,17 +88,14 @@ namespace Loanity.Domain.Entities
 
             mailMessage.To.Add(toEmail);
 
-            // Attach QR code if provided
             if (!string.IsNullOrEmpty(qrCodeBase64))
             {
                 byte[] qrCodeBytes = Convert.FromBase64String(qrCodeBase64);
                 using var ms = new MemoryStream(qrCodeBytes);
                 var attachment = new Attachment(ms, "reservation_qrcode.png", "image/png");
                 mailMessage.Attachments.Add(attachment);
-
                 await smtpClient.SendMailAsync(mailMessage);
             }
-
         }
     }
 }

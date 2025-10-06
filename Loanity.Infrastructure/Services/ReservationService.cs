@@ -116,7 +116,7 @@ namespace Loanity.Infrastructure.Services
                         equipment.Status = EquipmentStatus.Reserved;
 
                         var qrActive = new GenerateQRCode();
-                        using (var stream = qrActive.GenerateQRCodeGen(qrCodeText, null))
+                        using (var stream = qrActive.GenerateQRCodeGen(qrCodeText,reservation.UserId, null))
                         {
                             var activeBody = $@"
                         <h3>Your Reservation is Active</h3>
@@ -140,7 +140,7 @@ namespace Loanity.Infrastructure.Services
                         equipment.Status = EquipmentStatus.Loaned;
 
                         var qrFulfilled = new GenerateQRCode();
-                        using (var stream = qrFulfilled.GenerateQRCodeGen(qrCodeText, null))
+                        using (var stream = qrFulfilled.GenerateQRCodeGen(qrCodeText,reservation.UserId, null))
                         {
                             var fulfilledBody = $@"
                         <h3>Loan Confirmed</h3>

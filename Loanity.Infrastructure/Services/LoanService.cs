@@ -22,48 +22,10 @@ namespace Loanity.Infrastructure.Services
             _email = email;
         }
 
-
-        //public async Task<Loan> CreateLoanFromScanAsync(int userId, string qrCode, DateTime dueAt)
-        //{
-        //    var item = await _db.Equipment.SingleOrDefaultAsync(e => e.QrCode == qrCode);
-        //    if (item is null) throw new InvalidOperationException("Udstyret Findes Ikke!");
-
-        //    //----------------------------------------------
-
-        //    // Tillad både Available and Reserved status
-        //    if (item.Status != EquipmentStatus.Available && item.Status != EquipmentStatus.Reserved)
-        //        throw new InvalidOperationException("Udstyret er ikke tilgængelig!");
-
-        //    // Hvis den er reservere, check if the user is the one who reserved it 
-        //    if (item.Status == EquipmentStatus.Reserved)
-        //    {
-        //        var reservation = await _db.Reservations
-        //            .FirstOrDefaultAsync(r => r.EquipmentId == item.Id && r.UserId == userId && r.Status == ReservationStatus.Active);
-
-        //        if (reservation is null)
-        //            throw new InvalidOperationException("Du har ikke reserveret det her udstyret.");
-
-        //        // Reservation bliver fulfilled  fordi  Equipement Status blive loaned
-        //        reservation.Status = ReservationStatus.Fulfilled;
-        //    }
-
-        //    var loan = new Loan { UserId = userId, DueAt = dueAt, Status = LoanStatus.Active };
-        //    loan.Items.Add(new LoanItem { Loan = loan, Equipment = item });
-
-        //    item.Status = EquipmentStatus.Loaned;
-
-        //    _db.Loans.Add(loan);
-        //    await _db.SaveChangesAsync();
-        //    return loan;
-        //}
-
-
-
-
         public async Task<Loan> CreateLoanFromScanAsync(int userId, string qrCode, DateTime dueAt)
         {
             var item = await _db.Equipment
-                .Include(e => e.Reservations) // Needed to access reservation details
+                .Include(e => e.Reservations)
                 .FirstOrDefaultAsync(e => e.QrCode == qrCode);
 
             if (item is null)
@@ -93,7 +55,7 @@ namespace Loanity.Infrastructure.Services
                 StartAt = DateTime.UtcNow,
                 DueAt = dueAt,
                 Status = LoanStatus.Active,
-                Items = new List<LoanItem>() 
+                Items = new List<LoanItem>()
             };
 
             loan.Items.Add(new LoanItem
@@ -102,9 +64,11 @@ namespace Loanity.Infrastructure.Services
                 Equipment = item
             });
 
-
             item.Status = EquipmentStatus.Loaned;
             _db.Loans.Add(loan);
+
+            // Persist first so loan.Id is generated
+            await _db.SaveChangesAsync();
 
             // ✅ EMAIL LOGIC
             var user = reservation?.User ?? await _db.Users.FindAsync(userId);
@@ -115,7 +79,7 @@ namespace Loanity.Infrastructure.Services
             if (!string.IsNullOrWhiteSpace(toEmail))
             {
                 var qr = new GenerateQRCode();
-                using var qrStream = qr.GenerateQRCodeGen(qrCodeText, null);
+                using var qrStream = qr.GenerateQRCodeGen(qrCodeText, userId);
 
                 var body = $@"
             <h3>Loan Confirmed via Scan</h3>
@@ -133,33 +97,9 @@ namespace Loanity.Infrastructure.Services
                 );
             }
 
-            await _db.SaveChangesAsync();
             return loan;
         }
 
-
-
-        //public async Task<Loan?> ReturnByScanAsync(int userId, string qrCode)
-        //{
-        //    var item = await _db.Equipment.SingleOrDefaultAsync(e => e.QrCode == qrCode);
-        //    if (item is null) return null;
-
-        //    // find active loan containing this item
-        //    var loan = await _db.Loans
-        //        .Include(l => l.Items)
-        //        .Where(l => l.Status == LoanStatus.Active && l.Items.Any(i => i.EquipmentId == item.Id))
-        //        .OrderByDescending(l => l.StartAt)
-        //        .FirstOrDefaultAsync();
-
-        //    if (loan is null) return null;
-
-        //    loan.ReturnedAt = DateTime.UtcNow;
-        //    loan.Status = LoanStatus.Closed;
-        //    item.Status = EquipmentStatus.Available;
-
-        //    await _db.SaveChangesAsync();
-        //    return loan;
-        //}
         public async Task<Loan?> ReturnByScanAsync(int userId, string qrCode)
         {
             var item = await _db.Equipment.SingleOrDefaultAsync(e => e.QrCode == qrCode);

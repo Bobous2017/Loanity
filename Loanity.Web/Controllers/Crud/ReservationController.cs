@@ -26,15 +26,9 @@ namespace Loanity.Web.Controllers
         public override async Task<IActionResult> Create(Reservation reservation)
         {
             var res = await _http.PostAsJsonAsync($"{_actionBaseUrl}/create", reservation);
-
-            if (res.IsSuccessStatusCode)
-            {
-                TempData["Success"] = "Reservation was successfully created!";
-                return RedirectToAction("Read");
-            }
-
-            TempData["Error"] = "Failed to create reservation. Please check the form.";
-            return View(reservation);
+            return res.IsSuccessStatusCode
+                ? RedirectToAction("Read")
+                : View(reservation);
         }
 
 

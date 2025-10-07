@@ -3,7 +3,16 @@
 @{
     ViewData["Title"] = "All Reservations";
 }
-
+<a href="http://10.130.56.53:5253/api/export/reservations/csv"
+   class="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700"
+   target="_blank">
+    ⬇ Export to CSV
+</a>
+<a href="http://10.130.56.53:5253/api/export/reservations/pdf"
+   class="px-4 py-2 bg-green-600 text-white rounded-lg shadow hover:bg-green-700"
+   target="_blank">
+    ⬇ Export to Pdf
+</a>
 <h2 class="text-2xl font-bold text-gray-800 mb-6 text-center">Reservations</h2>
 
 <div class="mb-6 flex gap-4">
@@ -43,6 +52,7 @@ style="display: flex;flex-direction: row-reverse;align-items: baseline;">
 </div>
 @* -------------------------------------------------- *@
 
+
 <div class="overflow-x-auto bg-white shadow rounded-lg">
     <table id="reservationTable" class="w-full border-collapse">
         <thead class="bg-gray-100 text-gray-700">
@@ -68,14 +78,24 @@ style="display: flex;flex-direction: row-reverse;align-items: baseline;">
                     <td class="px-4 py-2">@reservation.EndAt.ToString("dd.MM.yyyy HH:mm")</td>
                     <td class="px-4 py-2">
                         <span class="px-2 py-1 rounded text-sm
-                            @(reservation.Status == Loanity.Domain.Statuses.ReservationStatus.Active ? "bg-green-100 text-green-700" :
-                              reservation.Status == Loanity.Domain.Statuses.ReservationStatus.Expired ? "bg-red-100 text-red-700" :
-                              reservation.Status == Loanity.Domain.Statuses.ReservationStatus.Fulfilled ? "bg-green-100 text-green-700" :
-                              reservation.Status == Loanity.Domain.Statuses.ReservationStatus.Pending ? "bg-orange-100 text-orange-700" :
-                              "bg-gray-100 text-gray-600")">
-                            @reservation.Status
-                        </span>
+                                        @(reservation.Status == Loanity.Domain.Statuses.ReservationStatus.Active ? "bg-green-100 text-green-700" :
+                                        reservation.Status == Loanity.Domain.Statuses.ReservationStatus.Expired ? "bg-red-100 text-red-700" :
+                                        reservation.Status == Loanity.Domain.Statuses.ReservationStatus.Fulfilled ? "bg-green-100 text-green-700" :
+                                        reservation.Status == Loanity.Domain.Statuses.ReservationStatus.Pending ? "bg-orange-100 text-orange-700" :"bg-gray-100 text-gray-600")">
+                    @reservation.Status
+                    </span>
+
+                        @* NEW badge logic *@
+                    @if (reservation.Status == Loanity.Domain.Statuses.ReservationStatus.Pending)
+                        {
+                            <span class="ml-2 inline-block px-2 py-1 text-xs font-semibold bg-yellow-100 text-yellow-800 rounded-full animate-pulse">
+                                NEW
+                            </span>
+
+
+                        }
                     </td>
+
                     <td class="px-4 py-2 space-x-2">
                       
                           

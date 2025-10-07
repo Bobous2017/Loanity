@@ -1,14 +1,17 @@
 using Loanity.Domain;
+using Loanity.Domain.Entities;
+using Loanity.Domain.IExports;
 using Loanity.Domain.IServices;
 using Loanity.Infrastructure;
+using Loanity.Infrastructure.Export;
 using Loanity.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Configuration; // Add this at the top
 using System.Text;
 using System.Text.Json.Serialization;
-using System.Configuration; // Add this at the top
-
+using QuestPDF.Infrastructure; 
 var builder = WebApplication.CreateBuilder(args);
 
 // Load JWT settings from config
@@ -52,6 +55,9 @@ builder.Services.AddScoped<ILoanService, LoanService>();
 builder.Services.AddScoped<IReservationService, ReservationService>(); // Step 4
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+builder.Services.AddScoped<IExportService<Reservation>, ReservationExportService>();
+builder.Services.AddScoped<IExportService<Loan>, LoanExportService>();
+builder.Services.AddScoped<IExportService<User>, UserExportService>();
 
 
 // Add controllers + Swagger
@@ -82,7 +88,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-
+QuestPDF.Settings.License = LicenseType.Community;
 // Middleware pipeline
 app.UseHttpsRedirection();
 app.UseCors("AllowAll"); 

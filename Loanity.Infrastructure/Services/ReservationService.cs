@@ -46,41 +46,7 @@ namespace Loanity.Infrastructure.Services
         }
 
 
-        // Update a reservation ()
-        //public async Task<bool> UpdateAsync(Reservation updated)
-        //{
-        //    var reservation = await _db.Reservations
-        //        .Include(r => r.Equipment) // 👈 Important
-        //        .FirstOrDefaultAsync(r => r.Id == updated.Id);
-
-        //    if (reservation == null)
-        //        return false;
-
-        //    reservation.StartAt = updated.StartAt;
-        //    reservation.EndAt = updated.EndAt;
-        //    reservation.UserId = updated.UserId;
-        //    reservation.EquipmentId = updated.EquipmentId;
-        //    reservation.Status = updated.Status;
-
-
-
-        //    //  Business rule: Update Equipment status based on Reservation status
-        //    var equipment = await _db.Equipment.FindAsync(updated.EquipmentId);
-        //    if (equipment != null)
-        //    {
-        //        equipment.Status = updated.Status switch
-        //        {
-        //            ReservationStatus.Active => EquipmentStatus.Reserved,
-        //            ReservationStatus.Fulfilled => EquipmentStatus.Loaned,
-        //            ReservationStatus.Cancelled => EquipmentStatus.Available,
-        //            ReservationStatus.Expired => EquipmentStatus.Available,
-        //            _ => equipment.Status
-        //        };
-        //    }
-
-        //    await _db.SaveChangesAsync();
-        //    return true;
-        //}
+        
         public async Task<bool> UpdateAsync(Reservation updated)
         {
             var reservation = await _db.Reservations

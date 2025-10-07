@@ -61,11 +61,11 @@ builder.Services.AddSwaggerGen();
 //  Add CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
+    options.AddPolicy("AllowAll", builder =>
     {
-        policy.WithOrigins("http://localhost:5191")
-              .AllowAnyHeader()
-              .AllowAnyMethod();
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
     });
 });
 
@@ -85,7 +85,7 @@ if (app.Environment.IsDevelopment())
 
 // Middleware pipeline
 app.UseHttpsRedirection();
-app.UseCors("AllowFrontend"); // Enable CORS
+app.UseCors("AllowAll"); 
 app.UseAuthentication();
 app.UseAuthorization();
 

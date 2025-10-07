@@ -17,6 +17,17 @@ namespace Loanity.Web.Controllers
             _http = factory.CreateClient("LoanityApi");
             _actionBaseUrl = "api/reservation-action"; // This using Actions
         }
+        public override async Task<IActionResult> Read()
+        {
+            var reservations = await _http.GetFromJsonAsync<List<Reservation>>(_baseUrl);
+            // Sort by StartAt descending
+            var sorted = reservations
+                .OrderByDescending(r => r.StartAt)
+                .ToList();
+
+            return View(sorted);
+        }
+
 
         // ---------------- OVERRIDE CREATE ----------------
         public override async Task<IActionResult> Create(){return View();}

@@ -17,11 +17,11 @@ namespace Loanity.Infrastructure.Services
             using var client = new SmtpClient("smtp.gmail.com")
             {
                 Port = 587,
-                Credentials = new NetworkCredential("bobousenselemani2017@gmail.com", "dmfs cdca gmzm xiuy"), // ⚠️ move to appsettings.json later
+                Credentials = new NetworkCredential("", ""), // ⚠️ move to appsettings.json later
                 EnableSsl = true
             };
 
-            var mail = new MailMessage("bobousenselemani2017@gmail.com", to, subject, body)
+            var mail = new MailMessage("", to, subject, body)
             {
                 IsBodyHtml = true
             };
